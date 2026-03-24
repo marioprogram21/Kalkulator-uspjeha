@@ -10,9 +10,9 @@
 
 <style>
 :root {
-    --bg-color: linear-gradient(135deg, #667eea, #764ba2); /* tamno-plava */
+    --bg-color: linear-gradient(135deg, #667eea, #764ba2);
     --text-color: white;
-    --box-color: rgba(255,255,255,0.15); /* glass efekt */
+    --box-color: rgba(255,255,255,0.15);
     --btn-color: #6c5ce7;
     --delete-color: red;
 
@@ -28,7 +28,7 @@ body {
     font-family: 'Segoe UI', sans-serif;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* VRACENO NA CENTAR */
     min-height: 100vh;
     margin: 0;
     padding: 0;
@@ -42,7 +42,7 @@ body.light {
 
 h1 { 
     margin: 0;
-    padding: 20px 0 10px 0;
+    padding: 20px 0 5px 0; /* MANJE RAZMAKA */
     text-align: center; 
 }
 
@@ -54,8 +54,7 @@ h1 {
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* lijevo poravnanje */
-    transition: all 0.3s ease;
+    align-items: center; /* VRACENO */
 }
 body.light .box { background: var(--box-light); }
 
@@ -63,7 +62,7 @@ body.light .box { background: var(--box-light); }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 4px 0; /* manji razmak */
+    margin: 3px 0; /* SMANJEN RAZMAK */
     padding: 8px 10px;
     width: 100%;
     border-radius: 12px;
@@ -80,23 +79,24 @@ body.light .ocjena-card { background: var(--box-light); }
     text-align: center;
 }
 
+/* VEĆI X */
 .delete {
     background: var(--delete-color);
     color: white;
     border: none;
-    padding: 4px 8px; /* malo veći X */
-    border-radius: 6px;
+    padding: 5px 9px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1em;
+    font-size: 0.9em;
 }
 
 .btn-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 5px; /* smanjeno */
+    margin-top: 5px; /* MANJE RAZMAKA */
     width: 100%;
 }
 
@@ -115,11 +115,11 @@ body.light button { background: var(--btn-light); }
 
 button:hover { opacity: 0.85; }
 
-.avg { text-align: center; margin-top: 10px; width: 100%; }
-.avg-number { font-size: 36px; font-weight: bold; letter-spacing: 1px; }
-.small { opacity: 0.8; font-size: 0.9em; text-align: left; }
+.avg { text-align: center; margin-top: 8px; width: 100%; }
+.avg-number { font-size: 36px; font-weight: bold; }
+.small { opacity: 0.8; font-size: 0.9em; }
 
-footer { margin-top: 15px; opacity: 0.7; text-align:center; }
+footer { margin-top: 10px; opacity: 0.7; text-align:center; }
 </style>
 </head>
 
@@ -147,17 +147,11 @@ footer { margin-top: 15px; opacity: 0.7; text-align:center; }
 <footer>Napravio Mario</footer>
 
 <script>
-// Tema
 function promijeniTemu(){
     document.body.classList.toggle('light');
     localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
 }
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
-
-// Dodavanje ocjena
-let grades = JSON.parse(localStorage.getItem("grades")) || [];
-
-function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
 
 function dodaj(v="") {
     const div = document.getElementById("ocjene");
@@ -211,15 +205,12 @@ function izracunaj(){
       "😬 Moraš učiti";
 }
 
-// Obriši sve
 function obrisiSve(){
     document.getElementById("ocjene").innerHTML = "";
-    grades = [];
-    save();
+    localStorage.removeItem("grades");
     izracunaj();
 }
 
-// Storage
 function spremi(){
     const arr=[];
     document.querySelectorAll("#ocjene input").forEach(i=>arr.push(i.value));
@@ -234,7 +225,7 @@ function ucitaj(){
 }
 ucitaj();
 
-// PWA Instalacija
+// PWA
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -244,7 +235,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
     btn.addEventListener('click', () => {
         btn.style.display = 'none';
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
     });
 });
 </script>
