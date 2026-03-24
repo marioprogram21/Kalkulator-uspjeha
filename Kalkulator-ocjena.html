@@ -31,7 +31,7 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    padding: 20px;
+    padding: 0; /* uklonjena vertikalna rupa */
     transition: all 0.3s ease;
 }
 
@@ -41,7 +41,8 @@ body.light {
 }
 
 h1 { 
-    margin: 0 0 20px 0; 
+    margin: 0; /* nema margine iznad i ispod */
+    padding: 20px 0 10px 0; /* malo prostora samo iznutra */
     text-align: center; 
 }
 
@@ -95,7 +96,7 @@ body.light .ocjena-card { background: var(--box-light); }
     justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 10px; /* manja udaljenost */
+    margin-top: 10px; /* smanjeno */
     width: 100%;
 }
 
