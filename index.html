@@ -2,14 +2,14 @@
 <html lang="hr">
 <head>
 <meta charset="UTF-8">
-<title>Menu Kalkulatora</title>
+<title>Kalkulator uspjeha</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#ff9900">
 <link rel="manifest" href="manifest.json">
 
 <style>
 :root {
-    --bg-color: #121212;
+    --bg-color: #667eea;
     --text-color: #ffffff;
     --accent-color: #ff9900;
 }
@@ -31,7 +31,11 @@ body {
     padding: 20px;
     transition: all 0.3s ease;
 }
-h1 { margin-bottom: 30px; text-align:center; }
+h1 { 
+    margin-bottom: 30px; 
+    text-align:center;
+    font-size: 2em;
+}
 .menu-box {
     display: flex;
     flex-direction: column;
@@ -55,9 +59,10 @@ button:hover { background: #ffa500; }
 footer { margin-top: 50px; opacity: 0.7; font-size: 0.9em; }
 </style>
 </head>
+
 <body>
 
-<h1>Kalkulatori</h1>
+<h1>Kalkulator uspjeha</h1>
 
 <div class="menu-box">
     <button onclick="window.location.href='Kalkulator-ocjena.html'">📊 Kalkulator ocjena</button>
@@ -69,8 +74,8 @@ footer { margin-top: 50px; opacity: 0.7; font-size: 0.9em; }
 <footer>Napravio Mario</footer>
 
 <script>
-// Tema
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
+
 function promijeniTemu(){
     document.body.classList.toggle('light');
     localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
@@ -83,11 +88,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
     deferredPrompt = e;
     const btn = document.getElementById('installBtn');
     btn.style.display = 'block';
-    btn.onclick = () => {
+    btn.addEventListener('click', () => {
         btn.style.display = 'none';
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-    };
+        deferredPrompt.userChoice.then(choiceResult => { deferredPrompt = null; });
+    });
 });
 </script>
 </body>
