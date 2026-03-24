@@ -69,23 +69,25 @@ footer { margin-top: 50px; opacity: 0.7; font-size: 0.9em; }
 <footer>Napravio Mario</footer>
 
 <script>
+// Tema
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 function promijeniTemu(){
     document.body.classList.toggle('light');
     localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
 }
 
+// PWA instalacija
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     const btn = document.getElementById('installBtn');
     btn.style.display = 'block';
-    btn.addEventListener('click', () => {
+    btn.onclick = () => {
         btn.style.display = 'none';
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choiceResult => { deferredPrompt = null; });
-    });
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+    };
 });
 </script>
 </body>
