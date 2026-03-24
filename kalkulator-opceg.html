@@ -150,9 +150,11 @@ button:hover { background: #555; }
 </div>
 
 <script>
-let grades = JSON.parse(localStorage.getItem("grades")) || [];
+let grades = JSON.parse(localStorage.getItem("grades") || "[]"); // uvijek array
 
-function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
+function save() { 
+    localStorage.setItem("grades", JSON.stringify(grades)); 
+}
 
 function handleEnter(e) { if (e.key === "Enter") add(); }
 
@@ -177,6 +179,9 @@ function removeAll() { grades = []; save(); render(); }
 function render() {
     const container = document.getElementById("cards");
     container.innerHTML = "";
+
+    // filtriraj samo ispravne podatke
+    grades = grades.filter(g => g.subject && !isNaN(g.grade));
 
     grades.forEach((g, i) => {
         const card = document.createElement("div");
