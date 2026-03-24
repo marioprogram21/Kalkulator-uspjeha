@@ -150,7 +150,17 @@ button:hover { background: #555; }
 </div>
 
 <script>
-let grades = JSON.parse(localStorage.getItem("grades") || "[]"); // uvijek array
+// Učitavanje i zamjena starih naziva predmeta
+let grades = JSON.parse(localStorage.getItem("grades") || "[]");
+
+// Zamijeni stare "Priroda" sa "Biologija (Priroda)"
+grades = grades.map(g => {
+    if(g.subject === "Priroda") g.subject = "Biologija (Priroda)";
+    return g;
+});
+
+// Filtriraj samo ispravne ocjene
+grades = grades.filter(g => g.subject && !isNaN(g.grade));
 
 function save() { 
     localStorage.setItem("grades", JSON.stringify(grades)); 
@@ -180,7 +190,6 @@ function render() {
     const container = document.getElementById("cards");
     container.innerHTML = "";
 
-    // filtriraj samo ispravne podatke
     grades = grades.filter(g => g.subject && !isNaN(g.grade));
 
     grades.forEach((g, i) => {
