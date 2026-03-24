@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<title>Opći uspjeh</title>
+<meta name="viewport" content="width=device-width">
+
+<style>
+body{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:linear-gradient(135deg,#667eea,#764ba2);
+font-family:Segoe UI;
+}
+
+.app{
+width:350px;
+padding:25px;
+border-radius:25px;
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(15px);
+}
+
+select,input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none;}
+
+button{
+width:100%;
+padding:10px;
+margin:5px 0;
+border:none;
+border-radius:10px;
+background:#333;
+color:white;
+}
+
+.card{
+display:flex;
+justify-content:space-between;
+background:white;
+padding:8px;
+border-radius:10px;
+margin-top:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<button onclick="location.href='index.html'">⬅ Nazad</button>
+
+<h2>Kalkulator uspjeha</h2>
+
+<select id="s">
+<option value="">Predmet</option>
+<option>Matematika</option>
+<option>Hrvatski</option>
+</select>
+
+<input id="g" type="number" placeholder="Ocjena">
+
+<button onclick="add()">Dodaj</button>
+
+<div id="list"></div>
+
+<h1 id="avg">0.00</h1>
+
+</div>
+
+<script>
+let arr=[];
+
+function add(){
+let s=document.getElementById("s").value;
+let g=+document.getElementById("g").value;
+if(!s||g<1||g>5)return;
+
+arr.push({s,g});
+render();
+}
+
+function render(){
+list.innerHTML="";
+let sum=0;
+
+arr.forEach((e,i)=>{
+sum+=e.g;
+let d=document.createElement("div");
+d.className="card";
+d.innerHTML=e.s+" "+e.g;
+list.appendChild(d);
+});
+
+avg.innerText=(sum/arr.length).toFixed(2);
+}
+
+// SW
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+
+</body>
+</html>

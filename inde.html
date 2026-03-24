@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator uspjeha</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff9900">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+}
+
+.menu{
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.1);
+    border-radius:25px;
+    padding:35px;
+    width:320px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+.menu h1{
+    color:white;
+    margin-bottom:25px;
+}
+
+.menu button{
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    border:none;
+    border-radius:14px;
+    font-weight:bold;
+    background:linear-gradient(135deg,#ff9900,#ffb84d);
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.menu button:hover{
+    transform:scale(1.05);
+}
+
+#installBtn{
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="menu">
+    <h1>Kalkulator uspjeha</h1>
+    <button onclick="location.href='kalkulator-ocjena.html'">📊 Kalkulator ocjena</button>
+    <button onclick="location.href='kalkulator-opceg.html'">🎓 Opći uspjeh</button>
+    <button id="installBtn">📲 Instaliraj app</button>
+</div>
+
+<script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt=e;
+    installBtn.style.display='block';
+});
+
+installBtn.onclick=()=>{
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(()=>deferredPrompt=null);
+};
+
+// SW
+if ('serviceWorker' in navigator) {
+ navigator.serviceWorker.register('sw.js');
+}
+</script>
+
+</body>
+</html>

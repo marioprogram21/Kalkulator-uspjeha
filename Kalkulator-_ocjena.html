@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<title>Kalkulator ocjena</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+--bg:#121212;--text:#fff;--box:#1f1f1f;--accent:#ff9900;
+}
+body.light{--bg:#f5f5f5;--text:#121212;--box:#fff;--accent:#007bff;}
+
+body{
+background:var(--bg);
+color:var(--text);
+font-family:Arial;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.box{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+padding:25px;
+border-radius:25px;
+width:350px;
+}
+
+.ocjena-card{
+display:flex;
+justify-content:space-between;
+margin:8px 0;
+padding:10px;
+background:var(--bg);
+border-radius:12px;
+transition:0.3s;
+}
+.ocjena-card:hover{transform:scale(1.03);}
+
+input{
+width:60px;
+padding:8px;
+border-radius:6px;
+border:none;
+text-align:center;
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:8px;
+background:var(--accent);
+color:var(--text);
+cursor:pointer;
+margin:3px;
+}
+.delete{background:red;}
+
+</style>
+</head>
+
+<body>
+
+<button onclick="location.href='index.html'">⬅ Nazad</button>
+
+<h1>Kalkulator ocjena</h1>
+
+<div class="box">
+<div id="ocjene"></div>
+
+<button onclick="dodaj()">+ Dodaj</button>
+<button onclick="izracunaj()">Izračunaj</button>
+<button onclick="obrisi()">Obriši</button>
+<button onclick="tema()">💡 Tema</button>
+
+<h2 id="rezultat"></h2>
+</div>
+
+<script>
+function tema(){
+document.body.classList.toggle('light');
+localStorage.setItem('t',document.body.classList.contains('light'));
+}
+if(localStorage.getItem('t')==='true')document.body.classList.add('light');
+
+function dodaj(v=""){
+let d=document.createElement("div");
+d.className="ocjena-card";
+
+let i=document.createElement("input");
+i.type="number";i.value=v;
+
+let b=document.createElement("button");
+b.innerText="X";b.className="delete";
+b.onclick=()=>{d.remove();save();};
+
+d.append(i,b);
+ocjene.appendChild(d);
+save();
+}
+
+function izracunaj(){
+let s=0,c=0;
+document.querySelectorAll("input").forEach(i=>{
+let v=+i.value;
+if(v>=1&&v<=5){s+=v;c++;}
+});
+rezultat.innerText=c?("Prosjek: "+(s/c).toFixed(2)):"Unesi!";
+}
+
+function obrisi(){ocjene.innerHTML="";localStorage.removeItem("o");}
+
+function save(){
+let arr=[];
+document.querySelectorAll("input").forEach(i=>arr.push(i.value));
+localStorage.setItem("o",JSON.stringify(arr));
+}
+
+function load(){
+let d=JSON.parse(localStorage.getItem("o"));
+if(d)d.forEach(v=>dodaj(v));else dodaj();
+}
+load();
+
+// SW
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+
+</body>
+</html>
