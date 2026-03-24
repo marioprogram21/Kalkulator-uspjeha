@@ -9,53 +9,60 @@
 <link rel="apple-touch-icon" href="icon.png">
 
 <style>
-* { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin:0; padding:0; }
-
+:root {
+    --bg-dark: linear-gradient(135deg, #667eea, #764ba2);  /* tamna ljubičasto-plava */
+    --bg-light: linear-gradient(135deg, #f0e6ff, #e0d4ff); /* svijetla tema */
+    --text-dark: black;
+    --text-light: #2c2c2c;
+    --card-dark: rgba(255,255,255,0.6);
+    --card-light: rgba(255,255,255,0.85);
+    --btn-dark: #333;
+    --btn-light: #6c5ce7;
+}
 body {
-    height: 100vh;
-    background: linear-gradient(135deg, #667eea, #764ba2); /* gradient pozadina */
+    background: var(--bg-dark);
+    color: var(--text-dark);
+    font-family: 'Segoe UI', sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    color: black;
-    transition: 0.3s ease;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    transition: all 0.3s ease;
 }
 
 body.light {
-    background: linear-gradient(135deg, #f0e6ff, #e0d4ff);
-    color: #2c2c2c;
+    background: var(--bg-light);
+    color: var(--text-light);
 }
 
-h1 {
-    text-align: center;
-    font-size: 2em;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-}
-
-.app {
+h1 { margin-bottom: 20px; text-align:center; }
+.box {
+    background: var(--card-dark);
+    padding: 25px;
+    border-radius: 20px;
     width: 360px;
-    padding: 30px;
-    border-radius: 25px;
-    background: rgba(255,255,255,0.85); /* kartica glass efekt */
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition: background 0.3s ease;
 }
+body.light .box { background: var(--card-light); }
 
 .ocjena-card {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    margin: 8px 0;
     padding: 10px 12px;
-    border-radius: 14px;
-    margin-top: 6px;
+    width: 100%;
+    border-radius: 12px;
     font-weight: bold;
     background: rgba(255,255,255,0.6);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: background 0.3s ease;
 }
+body.light .ocjena-card { background: rgba(255,255,255,0.85); }
 
 .ocjena-card input {
     width: 60px;
@@ -66,60 +73,56 @@ h1 {
 }
 
 .delete {
-    background: rgba(0,0,0,0.1);
+    background: red;
+    color: white;
     border: none;
-    color: black;
+    padding: 2px 6px;
     border-radius: 8px;
     cursor: pointer;
-    padding: 2px 6px;
     font-weight: bold;
-    transition: background 0.2s;
+    font-size: 0.8em;
 }
-
-.delete:hover { background: rgba(0,0,0,0.2); }
 
 .btn-group {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
     gap: 10px;
+    flex-wrap: wrap;
     margin-top: 15px;
     width: 100%;
 }
 
 button {
-    padding: 10px;
+    padding: 10px 15px;
     border: none;
     border-radius: 12px;
+    font-size: 1em;
     font-weight: bold;
-    cursor: pointer;
-    background: #333;
+    background: var(--btn-dark);
     color: white;
+    cursor: pointer;
     transition: 0.2s;
 }
+body.light button { background: var(--btn-light); color: white; }
+button:hover { opacity: 0.85; }
 
-button:hover { background: #555; }
+.cards { margin-top: 15px; }
 
-.avg {
-    text-align: center;
-    margin-top: 20px;
-}
-.avg-number {
-    font-size: 48px;
-    font-weight: bold;
-    color: black;
-}
-.small {
-    opacity: 0.8;
-    font-size: 0.9em;
-    color: black;
-}
+.avg { text-align: center; margin-top: 20px; }
+.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; color:black; }
+body.light .avg-number { color: black; }
+.small { opacity: 0.8; font-size: 0.9em; color:black; }
+body.light .small { color:black; }
+
+footer { margin-top: auto; opacity: 0.7; text-align:center; }
+
 </style>
 </head>
-
 <body>
-<div class="app">
-    <h1>Kalkulator ocjena</h1>
+
+<h1>Kalkulator ocjena</h1>
+
+<div class="box">
     <div id="ocjene"></div>
 
     <div class="btn-group">
@@ -131,11 +134,15 @@ button:hover { background: #555; }
         <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
     </div>
 
+    <div class="cards" id="cards"></div>
+
     <div class="avg">
-        <div class="avg-number" id="rezultat">0.00</div>
-        <div class="small" id="poruka"></div>
+        <div class="avg-number" id="avg">0.00</div>
+        <div class="small">Prosjek</div>
     </div>
 </div>
+
+<footer>Napravio Mario</footer>
 
 <script>
 // Tema
@@ -146,77 +153,56 @@ function promijeniTemu(){
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 
 // Dodavanje ocjena
-function dodaj(v=""){
-    const div = document.getElementById("ocjene");
-    const wrap = document.createElement("div");
-    wrap.className = "ocjena-card";
+let grades = JSON.parse(localStorage.getItem("grades")) || [];
 
-    const input = document.createElement("input");
-    input.type = "number";
-    input.placeholder = "1-5";
-    input.value = v;
-    input.oninput = spremi;
+function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
 
-    const btn = document.createElement("button");
-    btn.innerText = "X";
-    btn.className = "delete";
-    btn.onclick = () => { wrap.remove(); spremi(); };
-
-    wrap.appendChild(input);
-    wrap.appendChild(btn);
-    div.appendChild(wrap);
-    spremi();
+function add() {
+    const subject = prompt("Unesi predmet:") || "";
+    const grade = parseInt(prompt("Unesi ocjenu (1-5):") || 0);
+    if (!subject || grade < 1 || grade > 5) return;
+    grades.push({ subject, grade });
+    save();
+    render();
 }
 
-// Izračun
-function izracunaj(){
-    const inputs = document.querySelectorAll("#ocjene input");
-    let suma=0, count=0;
+function remove(i) { grades.splice(i, 1); save(); render(); }
 
-    inputs.forEach(i=>{
-        let v=Number(i.value);
-        if(v>=1 && v<=5){
-            suma+=v;
-            count++;
-        }
+function removeAll() { grades = []; save(); render(); }
+
+function render() {
+    const container = document.getElementById("cards");
+    container.innerHTML = "";
+    grades.forEach((g, i) => {
+        const card = document.createElement("div");
+        card.className = "ocjena-card";
+        card.innerHTML = `<span>${g.subject}</span>
+                          <span class="grade">${g.grade}</span>`;
+        const btn = document.createElement("button");
+        btn.className = "delete";
+        btn.textContent = "x";
+        btn.onclick = () => remove(i);
+        card.appendChild(btn);
+        container.appendChild(card);
     });
+    calc();
+}
 
-    if(count===0){
-        rezultat.innerText="Unesi ocjene!";
-        poruka.innerText="";
+function calc() {
+    if (grades.length === 0) {
+        document.getElementById("avg").textContent = "0.00";
         return;
     }
-
-    let p=suma/count;
-    rezultat.innerText=p.toFixed(2);
-
-    poruka.innerText =
-      p>=4.5 ? "🔥 Odličan!" :
-      p>=3.5 ? "👍 Vrlo dobar" :
-      p>=2.5 ? "🙂 Dobar" :
-      "😬 Moraš učiti";
+    let sum = grades.reduce((a,b)=>a+b.grade,0);
+    let avg = (sum / grades.length).toFixed(2);
+    const avgElem = document.getElementById("avg");
+    avgElem.textContent = avg;
+    if(avg>=4.5) avgElem.style.color = "green";
+    else if(avg>=3.5) avgElem.style.color = "orange";
+    else avgElem.style.color = "red";
 }
 
-// Obriši sve
-function obrisiSve(){
-    document.getElementById("ocjene").innerHTML = "";
-    localStorage.removeItem("ocjene");
-    rezultat.innerText="0.00";
-    poruka.innerText="";
-}
-
-// Storage
-function spremi(){
-    const arr=[];
-    document.querySelectorAll("#ocjene input").forEach(i=>arr.push(i.value));
-    localStorage.setItem("ocjene", JSON.stringify(arr));
-}
-
-function ucitaj(){
-    const data = JSON.parse(localStorage.getItem("ocjene"));
-    if(data){ data.forEach(v=>dodaj(v)); } else dodaj();
-}
-ucitaj();
+render();
 
 // PWA Instalacija
 let deferredPrompt;
@@ -232,5 +218,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
     });
 });
 </script>
+
 </body>
 </html>
