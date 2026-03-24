@@ -6,12 +6,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#667eea">
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
 
 <style>
 :root {
-    --bg-color: linear-gradient(135deg, #667eea, #764ba2);
+    --bg-color: linear-gradient(135deg, #667eea, #764ba2); /* tamno-plava */
     --text-color: white;
-    --box-color: rgba(255,255,255,0.15);
+    --box-color: rgba(255,255,255,0.15); /* glass efekt */
     --btn-color: #6c5ce7;
     --delete-color: red;
 
@@ -28,125 +29,122 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 100vh;
     margin: 0;
+    padding: 20px 0 40px 0;
+    transition: all 0.5s ease;
 }
 
-body.light {
+body.light { 
     background: var(--bg-light);
     color: var(--text-light);
 }
 
-h1 {
-    margin: 10px 0;
-    padding: 10px 0;
-    text-align: center;
+h1 { 
+    margin: 0;
+    padding: 20px 0 10px 0;
+    text-align: center; 
 }
 
 .box {
     background: var(--box-color);
-    padding: 10px 15px;
+    padding: 25px;
     border-radius: 20px;
-    width: 360px;
+    width: 380px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    transition: all 0.5s ease;
 }
 body.light .box { background: var(--box-light); }
 
-#ocjene {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
 .ocjena-card {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 6px 8px;
+    margin: 8px 0;
+    padding: 12px 15px;
     width: 100%;
-    border-radius: 12px;
+    border-radius: 14px;
     background: var(--box-color);
     font-weight: bold;
+    gap: 10px;
+    transform: scale(0);
+    animation: cardIn 0.3s forwards;
 }
 body.light .ocjena-card { background: var(--box-light); }
 
 .ocjena-card input {
-    width: 60px;
-    padding: 6px;
-    border-radius: 6px;
+    width: 80px;
+    padding: 10px;
+    border-radius: 8px;
     border: none;
     text-align: center;
+    font-size: 1.1em;
 }
 
 .delete {
     background: var(--delete-color);
     color: white;
     border: none;
-    padding: 6px 12px; /* veći X */
-    border-radius: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1em;
+    font-size: 0.9em;
+    transition: 0.2s;
 }
+.delete:hover { opacity: 0.8; }
 
 .btn-group {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 10px;
+    margin-top: 10px;
     width: 100%;
-    margin: 0;
 }
 
 button {
-    padding: 6px 10px;
+    padding: 10px 18px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: bold;
     background: var(--btn-color);
     color: white;
-    font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
 }
-
+body.light button { background: var(--btn-light); }
 button:hover { opacity: 0.85; }
 
-.avg {
-    text-align: center;
-    margin: 4px 0;
-}
-.avg-number {
-    font-size: 32px;
-    font-weight: bold;
-}
-.small {
-    font-size: 0.9em;
-}
+.avg { text-align: center; margin-top: 15px; }
+.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; transition: all 0.3s; }
+.small { opacity: 0.8; font-size: 0.9em; transition: all 0.3s; }
 
-footer {
-    margin: 10px 0;
-    opacity: 0.7;
-    text-align:center;
-}
+footer { margin-top: 20px; opacity: 0.7; text-align:center; }
+
+/* Animacije */
+@keyframes cardIn { from { transform: scale(0.5); opacity:0; } to { transform: scale(1); opacity:1; } }
+@keyframes fadeTheme { from {opacity:0.5;} to {opacity:1;} }
 </style>
 </head>
 
 <body>
-
 <h1>Kalkulator ocjena</h1>
 
-<div class="box">
+<div class="box" id="box">
     <div id="ocjene"></div>
 
     <div class="btn-group">
         <button onclick="dodaj()">+ Dodaj</button>
         <button onclick="izracunaj()">Izračunaj</button>
-        <button onclick="obrisiSve()">🗑 Obriši</button>
+        <button onclick="obrisiSve()">🗑 Obriši sve</button>
         <button onclick="promijeniTemu()">💡 Tema</button>
-        <button onclick="location.href='index.html'">🏠 Menu</button>
+        <button onclick="window.location.href='index.html'">🏠 Menu</button>
+        <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
     </div>
 
     <div class="avg">
@@ -158,14 +156,21 @@ footer {
 <footer>Napravio Mario</footer>
 
 <script>
+// Tema
 function promijeniTemu(){
     document.body.classList.toggle('light');
+    document.getElementById("box").style.animation = "fadeTheme 0.5s";
+    localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
 }
+if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 
-// dodavanje ocjena
-function dodaj(v=""){
+// Dodavanje ocjena
+let grades = JSON.parse(localStorage.getItem("grades")) || [];
+
+function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
+
+function dodaj(v="") {
     const div = document.getElementById("ocjene");
-
     const wrap = document.createElement("div");
     wrap.className = "ocjena-card";
 
@@ -173,41 +178,84 @@ function dodaj(v=""){
     input.type = "number";
     input.placeholder = "1-5";
     input.value = v;
+    input.oninput = spremi;
 
     const btn = document.createElement("button");
     btn.innerText = "X";
     btn.className = "delete";
-    btn.onclick = () => wrap.remove();
+    btn.onclick = () => { wrap.remove(); spremi(); izracunaj(); };
 
     wrap.appendChild(input);
     wrap.appendChild(btn);
     div.appendChild(wrap);
+    spremi();
+    izracunaj();
 }
 
-// izračun prosjeka
 function izracunaj(){
     const inputs = document.querySelectorAll("#ocjene input");
-    let sum=0, count=0;
+    let suma=0, count=0;
 
     inputs.forEach(i=>{
         let v=Number(i.value);
-        if(v>=1 && v<=5){
-            sum+=v;
-            count++;
-        }
+        if(v>=1 && v<=5){ suma+=v; count++; }
     });
 
-    document.getElementById("avg").textContent =
-        count ? (sum/count).toFixed(2) : "0.00";
+    const rezultat = document.getElementById("avg");
+    const poruka = document.querySelector(".small");
+
+    if(count===0){
+        rezultat.textContent="0.00";
+        poruka.textContent="";
+        return;
+    }
+
+    let p=suma/count;
+    rezultat.textContent = p.toFixed(2);
+    poruka.textContent =
+      p>=4.5 ? "🔥 Odličan!" :
+      p>=3.5 ? "👍 Vrlo dobar" :
+      p>=2.5 ? "🙂 Dobar" :
+      "😬 Moraš učiti";
+
+    // boja prosjeka
+    rezultat.style.color = p>=4.5 ? "lightgreen" : p>=3.5 ? "orange" : p>=2.5 ? "yellow" : "red";
 }
 
-// briši sve
 function obrisiSve(){
-    document.getElementById("ocjene").innerHTML="";
+    const div = document.getElementById("ocjene");
+    div.innerHTML = "";
+    grades = [];
+    save();
+    izracunaj();
 }
 
-// start
-dodaj();
+// Storage
+function spremi(){
+    grades = [];
+    document.querySelectorAll("#ocjene input").forEach(i=>grades.push(i.value));
+    localStorage.setItem("grades", JSON.stringify(grades));
+}
+
+function ucitaj(){
+    const data = JSON.parse(localStorage.getItem("grades"));
+    if(data && data.length>0){ data.forEach(v=>dodaj(v)); } else dodaj();
+}
+ucitaj();
+
+// PWA Instalacija
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById('installBtn');
+    btn.style.display = 'block';
+    btn.addEventListener('click', () => {
+        btn.style.display = 'none';
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+    });
+});
 </script>
 
 </body>
