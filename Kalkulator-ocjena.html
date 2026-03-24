@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#667eea">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon.png">
 
 <style>
 :root {
@@ -19,7 +18,6 @@
     --bg-light: linear-gradient(135deg, #f0e6ff, #e0d4ff);
     --text-light: black;
     --box-light: rgba(255,255,255,0.85);
-    --btn-light: #6c5ce7;
 }
 
 body {
@@ -29,10 +27,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
     margin: 0;
-    padding: 0;
-    transition: 0.3s;
 }
 
 body.light {
@@ -41,14 +36,13 @@ body.light {
 }
 
 h1 {
-    margin: 0;
-    padding: 20px 0 10px 0;
-    text-align: center;
+    margin: 10px 0;
 }
 
+/* 🔥 GLAVNI FIX */
 .box {
     background: var(--box-color);
-    padding: 20px;
+    padding: 15px;
     border-radius: 20px;
     width: 360px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
@@ -56,15 +50,15 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 6px; /* sve kontrolira */
 }
 body.light .box { background: var(--box-light); }
 
-/* 🔥 KLJUČNI FIX */
 #ocjene {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 4px; /* mali razmak */
+    gap: 4px;
 }
 
 .ocjena-card {
@@ -75,73 +69,65 @@ body.light .box { background: var(--box-light); }
     width: 100%;
     border-radius: 12px;
     background: var(--box-color);
-    font-weight: bold;
 }
 body.light .ocjena-card { background: var(--box-light); }
 
 .ocjena-card input {
     width: 60px;
-    padding: 8px;
+    padding: 6px;
     border-radius: 6px;
     border: none;
     text-align: center;
 }
 
-/* VEĆI X */
+/* veći X */
 .delete {
-    background: var(--delete-color);
+    background: red;
     color: white;
     border: none;
-    padding: 5px 9px;
-    border-radius: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1em;
 }
 
+/* nema rupe */
 .btn-group {
     display: flex;
     justify-content: center;
-    gap: 10px;
     flex-wrap: wrap;
-    margin-top: 5px; /* nema rupe */
+    gap: 8px;
     width: 100%;
+    margin: 0;
 }
 
 button {
     padding: 8px 12px;
     border: none;
-    border-radius: 12px;
-    font-size: 0.95em;
-    font-weight: bold;
+    border-radius: 10px;
     background: var(--btn-color);
     color: white;
+    font-weight: bold;
     cursor: pointer;
 }
-body.light button { background: var(--btn-light); }
-
-button:hover { opacity: 0.85; }
 
 .avg {
     text-align: center;
-    margin-top: 8px;
-    width: 100%;
+    margin: 0;
 }
 
 .avg-number {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: bold;
 }
 
 .small {
-    opacity: 0.8;
     font-size: 0.9em;
 }
 
 footer {
-    margin-top: 10px;
+    margin: 10px 0;
     opacity: 0.7;
-    text-align: center;
 }
 </style>
 </head>
@@ -156,10 +142,9 @@ footer {
     <div class="btn-group">
         <button onclick="dodaj()">+ Dodaj</button>
         <button onclick="izracunaj()">Izračunaj</button>
-        <button onclick="obrisiSve()">🗑 Obriši sve</button>
+        <button onclick="obrisiSve()">🗑 Obriši</button>
         <button onclick="promijeniTemu()">💡 Tema</button>
-        <button onclick="window.location.href='index.html'">🏠 Menu</button>
-        <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
+        <button onclick="location.href='index.html'">🏠 Menu</button>
     </div>
 
     <div class="avg">
@@ -171,16 +156,14 @@ footer {
 <footer>Napravio Mario</footer>
 
 <script>
-// Tema
 function promijeniTemu(){
     document.body.classList.toggle('light');
-    localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
 }
-if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 
-// Dodavanje
+// dodaj
 function dodaj(v=""){
     const div = document.getElementById("ocjene");
+
     const wrap = document.createElement("div");
     wrap.className = "ocjena-card";
 
@@ -188,83 +171,41 @@ function dodaj(v=""){
     input.type = "number";
     input.placeholder = "1-5";
     input.value = v;
-    input.oninput = spremi;
 
     const btn = document.createElement("button");
     btn.innerText = "X";
     btn.className = "delete";
-    btn.onclick = () => { wrap.remove(); spremi(); };
+    btn.onclick = () => wrap.remove();
 
     wrap.appendChild(input);
     wrap.appendChild(btn);
     div.appendChild(wrap);
-    spremi();
 }
 
-// Izračun
+// izračun
 function izracunaj(){
     const inputs = document.querySelectorAll("#ocjene input");
-    let suma=0, count=0;
+    let sum=0, count=0;
 
     inputs.forEach(i=>{
         let v=Number(i.value);
         if(v>=1 && v<=5){
-            suma+=v;
+            sum+=v;
             count++;
         }
     });
 
-    const avg = document.getElementById("avg");
-    const txt = document.querySelector(".small");
-
-    if(count===0){
-        avg.textContent="0.00";
-        txt.textContent="";
-        return;
-    }
-
-    let p=suma/count;
-    avg.textContent = p.toFixed(2);
-    txt.textContent =
-      p>=4.5 ? "🔥 Odličan!" :
-      p>=3.5 ? "👍 Vrlo dobar" :
-      p>=2.5 ? "🙂 Dobar" :
-      "😬 Moraš učiti";
+    document.getElementById("avg").textContent =
+        count ? (sum/count).toFixed(2) : "0.00";
 }
 
-// Obriši
+// briši
 function obrisiSve(){
     document.getElementById("ocjene").innerHTML="";
-    localStorage.removeItem("grades");
-    izracunaj();
 }
 
-// Storage
-function spremi(){
-    const arr=[];
-    document.querySelectorAll("#ocjene input").forEach(i=>arr.push(i.value));
-    localStorage.setItem("grades", JSON.stringify(arr));
-}
-
-function ucitaj(){
-    const data = JSON.parse(localStorage.getItem("grades"));
-    if(data) data.forEach(v=>dodaj(v));
-    else dodaj();
-}
-ucitaj();
-
-// PWA
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const btn = document.getElementById('installBtn');
-    btn.style.display = 'block';
-    btn.addEventListener('click', () => {
-        btn.style.display = 'none';
-        deferredPrompt.prompt();
-    });
-});
+// start
+dodaj();
 </script>
 
 </body>
