@@ -9,49 +9,45 @@
 <link rel="apple-touch-icon" href="icon.png">
 
 <style>
-:root {
-  --bg-color: #121212;
-  --text-color: #fff;
-  --box-color: #1f1f1f;
-  --accent-color: #ff9900;
-}
-body.light {
-  --bg-color: #f5f5f5;
-  --text-color: #121212;
-  --box-color: #ffffff;
-  --accent-color: #007bff;
-}
+* { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin:0; padding:0; }
+
 body {
-  background: var(--bg-color);
-  color: var(--text-color);
-  font-family: 'Arial', sans-serif;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  padding: 20px;
-  transition: all 0.3s ease;
+  color: black;
+  transition: 0.3s;
 }
-h1 { margin-bottom: 20px; text-align:center; }
-.box {
-  background: var(--box-color);
-  padding: 25px;
-  border-radius: 20px;
+body.light { background: #f5f5f5; color: black; }
+
+.app {
   width: 360px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+  padding: 30px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
+  animation: fadeIn 0.6s ease;
 }
+
+h2 { text-align:center; font-size:2em; margin-bottom:20px; text-shadow:1px 1px 2px rgba(0,0,0,0.3); }
+
 select, input[type=number] {
   width: 100%;
   padding: 12px;
   margin: 8px 0;
-  border-radius: 12px;
   border: none;
+  border-radius: 12px;
+  outline: none;
   font-size: 1em;
+  background: white;
+  color: black;
 }
+
 .cards { margin-top: 15px; width:100%; }
 .card {
   display: flex;
@@ -62,12 +58,12 @@ select, input[type=number] {
   border-radius: 14px;
   font-weight: bold;
   background: rgba(255,255,255,0.6);
-  color:black;
   transition: transform 0.2s;
 }
 .card:hover { transform: translateY(-2px); }
-.card span { width: 70%; }
+.card span { width:70%; }
 .grade { text-align:right; width:20%; }
+
 .delete {
   background: rgba(0,0,0,0.1);
   border:none;
@@ -80,20 +76,22 @@ select, input[type=number] {
 }
 .delete:hover { background: rgba(0,0,0,0.2); }
 
-.btn-group { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px; width:100%; }
-button { padding:10px 15px; border:none; border-radius:8px; cursor:pointer; background:var(--accent-color); color:var(--text-color); font-weight:bold; min-width:100px; transition:0.2s; }
-button:hover { opacity:0.85; }
+.btn-group { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:10px; width:100%; }
+button { padding:10px 15px; border:none; border-radius:12px; cursor:pointer; font-weight:bold; background:#333; color:white; min-width:120px; transition:0.2s; }
+button:hover { background:#555; }
 
 .avg { text-align:center; margin-top:20px; }
-.avg-number { font-size:48px; font-weight:bold; letter-spacing:1px; }
-footer { margin-top:auto; opacity:0.7; text-align:center; }
+.avg-number { font-size:48px; font-weight:bold; }
+.small { opacity:0.8; font-size:0.9em; }
+
+@keyframes fadeIn { from {opacity:0; transform: translateY(25px);} to {opacity:1; transform: translateY(0);} }
 </style>
 </head>
+
 <body>
+<div class="app">
+  <h2>Kalkulator općeg uspjeha</h2>
 
-<h1>Kalkulator općeg uspjeha</h1>
-
-<div class="box">
   <select id="subject">
     <option value="" disabled selected>Odaberi predmet</option>
     <option>Matematika</option>
@@ -114,8 +112,8 @@ footer { margin-top:auto; opacity:0.7; text-align:center; }
   <div class="btn-group">
     <button onclick="add()">Dodaj ocjenu</button>
     <button onclick="removeAll()">Obriši sve</button>
-    <button onclick="promijeniTemu()">💡 Tema</button>
     <button onclick="window.location.href='index.html'">🏠 Menu</button>
+    <button onclick="promijeniTemu()">💡 Tema</button>
     <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
   </div>
 
@@ -132,77 +130,67 @@ footer { margin-top:auto; opacity:0.7; text-align:center; }
 <script>
 let grades = JSON.parse(localStorage.getItem("grades")) || [];
 
+function handleEnter(e){ if(e.key==='Enter') add(); }
+function add(){
+  const subject = document.getElementById("subject").value;
+  const grade = parseInt(document.getElementById("grade").value);
+  if(!subject || grade<1 || grade>5) return;
+  grades.push({subject, grade});
+  save(); render();
+  document.getElementById("subject").selectedIndex=0;
+  document.getElementById("grade").value="";
+}
+function remove(i){ grades.splice(i,1); save(); render(); }
+function removeAll(){ grades=[]; save(); render(); }
+function save(){ localStorage.setItem("grades", JSON.stringify(grades)); }
+function render(){
+  const container=document.getElementById("cards");
+  container.innerHTML="";
+  grades.forEach((g,i)=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`<span>${g.subject}</span><span class="grade">${g.grade}</span>`;
+    const btn=document.createElement("button");
+    btn.className="delete"; btn.textContent="x"; btn.onclick=()=>remove(i);
+    card.appendChild(btn); container.appendChild(card);
+  });
+  calc();
+}
+function calc(){
+  if(grades.length===0){ document.getElementById("avg").textContent="0.00"; return; }
+  let sum=grades.reduce((a,b)=>a+b.grade,0);
+  let avg=(sum/grades.length).toFixed(2);
+  const avgElem=document.getElementById("avg");
+  avgElem.textContent=avg;
+  if(avg>=4.5) avgElem.style.color="green";
+  else if(avg>=3.5) avgElem.style.color="orange";
+  else avgElem.style.color="red";
+}
+render();
+
 // Tema
 function promijeniTemu(){
-    document.body.classList.toggle('light');
-    localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
+  document.body.classList.toggle('light');
+  localStorage.setItem('tema',document.body.classList.contains('light')?'light':'dark');
 }
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 
-// Enter
-function handleEnter(e){ if(e.key==='Enter') add(); }
-
-// Dodaj ocjenu
-function add(){
-    const subject = document.getElementById("subject").value;
-    const grade = parseInt(document.getElementById("grade").value);
-    if(!subject || grade<1 || grade>5) return;
-    grades.push({subject, grade});
-    save(); render();
-    document.getElementById("subject").selectedIndex=0;
-    document.getElementById("grade").value="";
-}
-
-// Obriši jedan
-function remove(i){ grades.splice(i,1); save(); render(); }
-// Obriši sve
-function removeAll(){ grades=[]; save(); render(); }
-// Spremi u storage
-function save(){ localStorage.setItem("grades", JSON.stringify(grades)); }
-
-// Render
-function render(){
-    const container = document.getElementById("cards");
-    container.innerHTML="";
-    grades.forEach((g,i)=>{
-        const card = document.createElement("div");
-        card.className="card";
-        card.innerHTML=`<span>${g.subject}</span><span class="grade">${g.grade}</span>`;
-        const btn = document.createElement("button");
-        btn.className="delete"; btn.textContent="x"; btn.onclick=()=>remove(i);
-        card.appendChild(btn); container.appendChild(card);
-    });
-    calc();
-}
-
-// Izračun
-function calc(){
-    if(grades.length===0){ document.getElementById("avg").textContent="0.00"; return; }
-    let sum=grades.reduce((a,b)=>a+b.grade,0);
-    let avg=(sum/grades.length).toFixed(2);
-    const avgElem = document.getElementById("avg");
-    avgElem.textContent=avg;
-    if(avg>=4.5) avgElem.style.color="green";
-    else if(avg>=3.5) avgElem.style.color="orange";
-    else avgElem.style.color="red";
-}
-
-render();
-
-// PWA Instalacija
+// PWA instalacija
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e)=>{
-    e.preventDefault();
-    deferredPrompt=e;
-    const btn = document.getElementById('installBtn');
-    btn.style.display='block';
-    btn.addEventListener('click', ()=>{
-        btn.style.display='none';
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choiceResult=>{ deferredPrompt=null; });
-    });
+  e.preventDefault();
+  deferredPrompt=e;
+  const btn=document.getElementById('installBtn');
+  btn.style.display='block';
+  btn.addEventListener('click',()=>{
+    btn.style.display='none';
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice=>{ deferredPrompt=null; });
+  });
 });
-</script>
 
+// Enter key
+document.getElementById("grade").addEventListener("keypress", handleEnter);
+</script>
 </body>
 </html>
