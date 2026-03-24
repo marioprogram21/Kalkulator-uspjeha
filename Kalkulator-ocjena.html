@@ -54,7 +54,8 @@ h1 {
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; /* kartice lijevo */
+    gap: 5px; /* minimalni razmak između kartica */
     transition: all 0.3s ease;
 }
 body.light .box { background: var(--box-light); }
@@ -63,9 +64,8 @@ body.light .box { background: var(--box-light); }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 6px 0;
-    padding: 10px 12px;
     width: 100%;
+    padding: 8px 12px;
     border-radius: 12px;
     background: var(--box-color);
     font-weight: bold;
@@ -74,7 +74,7 @@ body.light .ocjena-card { background: var(--box-light); }
 
 .ocjena-card input {
     width: 60px;
-    padding: 8px;
+    padding: 6px;
     border-radius: 6px;
     border: none;
     text-align: center;
@@ -84,11 +84,11 @@ body.light .ocjena-card { background: var(--box-light); }
     background: var(--delete-color);
     color: white;
     border: none;
-    padding: 1px 3px;
-    border-radius: 4px;
+    padding: 6px 10px; /* veći gumb */
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 0.7em;
+    font-size: 1em; /* veći X */
 }
 
 .btn-group {
@@ -100,16 +100,11 @@ body.light .ocjena-card { background: var(--box-light); }
     width: 100%;
 }
 
-.btn-group button:nth-child(3) { /* 🗑 Obriši sve manji */
-    padding: 5px 8px;
-    font-size: 0.8em;
-}
-
 button {
-    padding: 10px 15px;
+    padding: 8px 12px; /* malo manji gumbi osim X */
     border: none;
     border-radius: 12px;
-    font-size: 1em;
+    font-size: 0.95em;
     font-weight: bold;
     background: var(--btn-color);
     color: white;
@@ -117,10 +112,9 @@ button {
     transition: 0.2s;
 }
 body.light button { background: var(--btn-light); }
-
 button:hover { opacity: 0.85; }
 
-.avg { text-align: center; margin-top: 15px; }
+.avg { text-align: center; margin-top: 15px; width: 100%; }
 .avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; }
 .small { opacity: 0.8; font-size: 0.9em; }
 
@@ -131,7 +125,7 @@ footer { margin-top: 15px; opacity: 0.7; text-align:center; }
 <body>
 <h1>Kalkulator ocjena</h1>
 
-<div class="box">
+<div class="box" id="box">
     <div id="ocjene"></div>
 
     <div class="btn-group">
