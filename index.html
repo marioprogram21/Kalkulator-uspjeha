@@ -70,13 +70,11 @@ footer { margin-top: 50px; opacity: 0.7; font-size: 0.9em; }
 
 <script>
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
-
 function promijeniTemu(){
     document.body.classList.toggle('light');
     localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
 }
 
-// PWA instalacija
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -86,7 +84,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     btn.addEventListener('click', () => {
         btn.style.display = 'none';
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+        deferredPrompt.userChoice.then(choiceResult => { deferredPrompt = null; });
     });
 });
 </script>
