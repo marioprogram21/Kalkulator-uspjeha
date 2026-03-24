@@ -10,14 +10,14 @@
 
 <style>
 :root {
-    --bg-color: linear-gradient(135deg, #667eea, #764ba2); /* tamno-plava pozadina */
-    --text-color: #ffffff;
-    --box-color: rgba(255,255,255,0.15); /* glass efekt kartica */
-    --btn-color: #6c5ce7;               /* gumbi */
+    --bg-color: linear-gradient(135deg, #667eea, #764ba2); /* tamno-plava */
+    --text-color: white;
+    --box-color: rgba(255,255,255,0.15); /* glass efekt */
+    --btn-color: #6c5ce7;
     --delete-color: red;
 
     --bg-light: linear-gradient(135deg, #f0e6ff, #e0d4ff);
-    --text-light: #2c2c2c;
+    --text-light: black;
     --box-light: rgba(255,255,255,0.85);
     --btn-light: #6c5ce7;
 }
@@ -35,27 +35,26 @@ body {
     transition: all 0.3s ease;
 }
 
-body.light {
+body.light { 
     background: var(--bg-light);
     color: var(--text-light);
 }
 
-h1 {
+h1 { 
     margin: 0;
     padding: 20px 0 10px 0;
-    text-align: center;
+    text-align: center; 
 }
 
 .box {
     background: var(--box-color);
-    padding: 20px;
+    padding: 25px;
     border-radius: 20px;
     width: 360px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px; /* manji razmak između kartica i tipki */
     transition: all 0.3s ease;
 }
 body.light .box { background: var(--box-light); }
@@ -64,14 +63,14 @@ body.light .box { background: var(--box-light); }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 4px 0; /* manji razmak između kartica */
+    margin: 6px 0;
     padding: 10px 12px;
     width: 100%;
     border-radius: 12px;
     background: var(--box-color);
     font-weight: bold;
 }
-body.light .ocjena-card { background: var(--box-light); color: var(--text-light); }
+body.light .ocjena-card { background: var(--box-light); }
 
 .ocjena-card input {
     width: 60px;
@@ -81,23 +80,31 @@ body.light .ocjena-card { background: var(--box-light); color: var(--text-light)
     text-align: center;
 }
 
+/* Smanjene tipke za brisanje */
 .delete {
     background: var(--delete-color);
     color: white;
     border: none;
-    padding: 2px 6px;
-    border-radius: 8px;
+    padding: 2px 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 0.8em;
+    font-size: 0.75em;
 }
 
 .btn-group {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
     flex-wrap: wrap;
-    gap: 8px;
+    margin-top: 10px;
     width: 100%;
+}
+
+/* Smanjeni gumb "🗑 Obriši sve" */
+.btn-group button:nth-child(3) {
+    padding: 8px 12px;
+    font-size: 0.9em;
 }
 
 button {
@@ -109,32 +116,17 @@ button {
     background: var(--btn-color);
     color: white;
     cursor: pointer;
-    flex: 1;
-    min-width: 100px;
     transition: 0.2s;
 }
-body.light button { background: var(--btn-light); color: var(--text-light); }
+body.light button { background: var(--btn-light); }
+
 button:hover { opacity: 0.85; }
 
-.avg {
-    text-align: center;
-    margin-top: 10px;
-}
-.avg-number {
-    font-size: 48px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-.small {
-    opacity: 0.8;
-    font-size: 0.9em;
-}
+.avg { text-align: center; margin-top: 15px; }
+.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; }
+.small { opacity: 0.8; font-size: 0.9em; }
 
-footer {
-    margin-top: 10px;
-    opacity: 0.7;
-    text-align: center;
-}
+footer { margin-top: 15px; opacity: 0.7; text-align:center; }
 </style>
 </head>
 
@@ -188,7 +180,7 @@ function dodaj(v="") {
     const btn = document.createElement("button");
     btn.innerText = "X";
     btn.className = "delete";
-    btn.onclick = () => { wrap.remove(); spremi(); izracunaj(); };
+    btn.onclick = () => { wrap.remove(); spremi(); };
 
     wrap.appendChild(input);
     wrap.appendChild(btn);
@@ -196,7 +188,6 @@ function dodaj(v="") {
     spremi();
 }
 
-// Izračun
 function izracunaj(){
     const inputs = document.querySelectorAll("#ocjene input");
     let suma=0, count=0;
