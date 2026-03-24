@@ -28,22 +28,22 @@ body {
     font-family: 'Segoe UI', sans-serif;
     display: flex;
     flex-direction: column;
-    align-items: center; /* VRACENO NA CENTAR */
+    align-items: center;
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    transition: all 0.3s ease;
+    transition: 0.3s;
 }
 
-body.light { 
+body.light {
     background: var(--bg-light);
     color: var(--text-light);
 }
 
-h1 { 
+h1 {
     margin: 0;
-    padding: 20px 0 5px 0; /* MANJE RAZMAKA */
-    text-align: center; 
+    padding: 20px 0 10px 0;
+    text-align: center;
 }
 
 .box {
@@ -52,17 +52,25 @@ h1 {
     border-radius: 20px;
     width: 360px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+
     display: flex;
     flex-direction: column;
-    align-items: center; /* VRACENO */
+    align-items: center;
 }
 body.light .box { background: var(--box-light); }
+
+/* 🔥 KLJUČNI FIX */
+#ocjene {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* mali razmak */
+}
 
 .ocjena-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 3px 0; /* SMANJEN RAZMAK */
     padding: 8px 10px;
     width: 100%;
     border-radius: 12px;
@@ -88,7 +96,7 @@ body.light .ocjena-card { background: var(--box-light); }
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 1em;
 }
 
 .btn-group {
@@ -96,7 +104,7 @@ body.light .ocjena-card { background: var(--box-light); }
     justify-content: center;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 5px; /* MANJE RAZMAKA */
+    margin-top: 5px; /* nema rupe */
     width: 100%;
 }
 
@@ -109,21 +117,37 @@ button {
     background: var(--btn-color);
     color: white;
     cursor: pointer;
-    transition: 0.2s;
 }
 body.light button { background: var(--btn-light); }
 
 button:hover { opacity: 0.85; }
 
-.avg { text-align: center; margin-top: 8px; width: 100%; }
-.avg-number { font-size: 36px; font-weight: bold; }
-.small { opacity: 0.8; font-size: 0.9em; }
+.avg {
+    text-align: center;
+    margin-top: 8px;
+    width: 100%;
+}
 
-footer { margin-top: 10px; opacity: 0.7; text-align:center; }
+.avg-number {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.small {
+    opacity: 0.8;
+    font-size: 0.9em;
+}
+
+footer {
+    margin-top: 10px;
+    opacity: 0.7;
+    text-align: center;
+}
 </style>
 </head>
 
 <body>
+
 <h1>Kalkulator ocjena</h1>
 
 <div class="box">
@@ -147,13 +171,15 @@ footer { margin-top: 10px; opacity: 0.7; text-align:center; }
 <footer>Napravio Mario</footer>
 
 <script>
+// Tema
 function promijeniTemu(){
     document.body.classList.toggle('light');
     localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
 }
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 
-function dodaj(v="") {
+// Dodavanje
+function dodaj(v=""){
     const div = document.getElementById("ocjene");
     const wrap = document.createElement("div");
     wrap.className = "ocjena-card";
@@ -175,6 +201,7 @@ function dodaj(v="") {
     spremi();
 }
 
+// Izračun
 function izracunaj(){
     const inputs = document.querySelectorAll("#ocjene input");
     let suma=0, count=0;
@@ -187,30 +214,32 @@ function izracunaj(){
         }
     });
 
-    const rezultat = document.getElementById("avg");
-    const poruka = document.querySelector(".small");
+    const avg = document.getElementById("avg");
+    const txt = document.querySelector(".small");
 
     if(count===0){
-        rezultat.textContent="0.00";
-        poruka.textContent="";
+        avg.textContent="0.00";
+        txt.textContent="";
         return;
     }
 
     let p=suma/count;
-    rezultat.textContent = p.toFixed(2);
-    poruka.textContent =
+    avg.textContent = p.toFixed(2);
+    txt.textContent =
       p>=4.5 ? "🔥 Odličan!" :
       p>=3.5 ? "👍 Vrlo dobar" :
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
 }
 
+// Obriši
 function obrisiSve(){
-    document.getElementById("ocjene").innerHTML = "";
+    document.getElementById("ocjene").innerHTML="";
     localStorage.removeItem("grades");
     izracunaj();
 }
 
+// Storage
 function spremi(){
     const arr=[];
     document.querySelectorAll("#ocjene input").forEach(i=>arr.push(i.value));
@@ -219,9 +248,8 @@ function spremi(){
 
 function ucitaj(){
     const data = JSON.parse(localStorage.getItem("grades"));
-    if(data && data.length>0){
-        data.forEach(v=>dodaj(v));
-    } else dodaj();
+    if(data) data.forEach(v=>dodaj(v));
+    else dodaj();
 }
 ucitaj();
 
