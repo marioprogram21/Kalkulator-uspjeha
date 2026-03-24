@@ -14,6 +14,14 @@
     --accent-color: #6c5ce7;    /* ljubičasto-plavi gumbi */
     --hover-color: #5a4fcf;     /* tamniji hover za gumb */
 }
+
+body.light {
+    --bg-color: #f0e6ff;       /* svijetla tema pozadina */
+    --text-color: #2c2c2c;     /* tamno sivi tekst */
+    --accent-color: #6c5ce7;   /* ljubičasto-plavi gumbi */
+    --hover-color: #5a4fcf;    /* hover gumbi ostaje isti */
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -27,17 +35,20 @@ body {
     padding: 20px;
     transition: all 0.3s ease;
 }
+
 h1 {
     margin-bottom: 40px;
     text-align: center;
     color: var(--text-color);
 }
+
 .menu-box {
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-items: center;
 }
+
 button {
     padding: 15px 30px;
     border: none;
@@ -55,12 +66,14 @@ button:hover {
     background: var(--hover-color);
     box-shadow: 0 7px 20px rgba(0,0,0,0.25);
 }
+
 #installBtn { display: none; }
+
 footer {
     margin-top: 50px;
     opacity: 0.7;
     font-size: 0.9em;
-    color: #fff;
+    color: var(--text-color);
 }
 </style>
 </head>
@@ -71,12 +84,25 @@ footer {
 <div class="menu-box">
     <button onclick="window.location.href='Kalkulator-ocjena.html'">📊 Kalkulator ocjena</button>
     <button onclick="window.location.href='kalkulator-opceg.html'">🎓 Kalkulator općeg uspjeha</button>
+    <button onclick="toggleTheme()">💡 Promijeni temu</button>
     <button id="installBtn">📲 Preuzmi app</button>
 </div>
 
 <footer>Napravio Mario</footer>
 
 <script>
+// Tema: učitaj prethodno odabranu
+if(localStorage.getItem('tema') === 'light') {
+    document.body.classList.add('light');
+}
+
+// Funkcija za promjenu teme
+function toggleTheme() {
+    document.body.classList.toggle('light');
+    const tema = document.body.classList.contains('light') ? 'light' : 'dark';
+    localStorage.setItem('tema', tema);
+}
+
 // PWA Instalacija
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -87,7 +113,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     btn.addEventListener('click', () => {
         btn.style.display = 'none';
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choiceResult => { deferredPrompt = null; });
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
     });
 });
 </script>
