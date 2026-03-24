@@ -4,131 +4,138 @@
 <meta charset="UTF-8">
 <title>Kalkulator ocjena</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1a237e">
+<meta name="theme-color" content="#667eea">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
 
 <style>
-:root {
-  --bg-color: #1a237e;      /* TAMNO PLAVA - glavna tema */
-  --text-color: #ffffff;
-  --box-color: #283593;     /* kartice */
-  --accent-color: #6c5ce7;  /* gumbi */
-}
-body.light {
-  --bg-color: #f0e6ff;      /* svijetla verzija */
-  --text-color: #2c2c2c;
-  --box-color: #ffffff;
-  --accent-color: #6c5ce7;
-}
+* { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin:0; padding:0; }
 
 body {
-  background: var(--bg-color);
-  color: var(--text-color);
-  font-family: 'Arial', sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  padding: 20px;
-  transition: all 0.3s ease;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2); /* gradient pozadina */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    transition: 0.3s ease;
 }
 
-h1 { margin-bottom: 20px; }
+body.light {
+    background: linear-gradient(135deg, #f0e6ff, #e0d4ff);
+    color: #2c2c2c;
+}
 
-.box {
-  background: var(--box-color);
-  padding: 25px;
-  border-radius: 20px;
-  width: 350px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+h1 {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.app {
+    width: 360px;
+    padding: 30px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.85); /* kartica glass efekt */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .ocjena-card {
-  display: flex;
-  justify-content: space-between;
-  margin: 8px 0;
-  padding: 10px 15px;
-  width: 100%;
-  background: rgba(255,255,255,0.1); /* glass efekt */
-  border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 14px;
+    margin-top: 6px;
+    font-weight: bold;
+    background: rgba(255,255,255,0.6);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .ocjena-card input {
-  width: 60px;
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
-  text-align: center;
+    width: 60px;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    text-align: center;
 }
 
-.delete { 
-  background: red; 
-  color: white; 
-  border: none; 
-  padding: 5px 10px; 
-  border-radius: 6px; 
-  cursor: pointer; 
+.delete {
+    background: rgba(0,0,0,0.1);
+    border: none;
+    color: black;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 2px 6px;
+    font-weight: bold;
+    transition: background 0.2s;
 }
 
-.btn-group { 
-  display: flex; 
-  gap: 10px; 
-  flex-wrap: wrap; 
-  margin-top: 15px; 
-  width: 100%; 
-  justify-content: center; 
+.delete:hover { background: rgba(0,0,0,0.2); }
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    width: 100%;
 }
 
 button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background: var(--accent-color);
-  color: #fff;
-  font-weight: bold;
-  min-width: 100px;
-  transition: 0.2s;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #333;
+    color: white;
+    transition: 0.2s;
 }
 
-button:hover { opacity: 0.85; }
+button:hover { background: #555; }
 
-#rezultat { margin-top: 15px; font-size: 1.3em; }
-#poruka { margin-top: 5px; text-align:center; }
-
-footer { 
-  margin-top: auto; 
-  opacity: 0.7; 
-  text-align:center; 
+.avg {
+    text-align: center;
+    margin-top: 20px;
+}
+.avg-number {
+    font-size: 48px;
+    font-weight: bold;
+    color: black;
+}
+.small {
+    opacity: 0.8;
+    font-size: 0.9em;
+    color: black;
 }
 </style>
 </head>
+
 <body>
+<div class="app">
+    <h1>Kalkulator ocjena</h1>
+    <div id="ocjene"></div>
 
-<h1>Kalkulator ocjena</h1>
+    <div class="btn-group">
+        <button onclick="dodaj()">+ Dodaj</button>
+        <button onclick="izracunaj()">Izračunaj</button>
+        <button onclick="obrisiSve()">🗑 Obriši sve</button>
+        <button onclick="promijeniTemu()">💡 Tema</button>
+        <button onclick="window.location.href='index.html'">🏠 Menu</button>
+        <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
+    </div>
 
-<div class="box">
-  <div id="ocjene"></div>
-
-  <div class="btn-group">
-    <button onclick="dodaj()">+ Dodaj</button>
-    <button onclick="izracunaj()">Izračunaj</button>
-    <button onclick="obrisiSve()">🗑 Obriši sve</button>
-    <button onclick="promijeniTemu()">💡 Tema</button>
-    <button onclick="window.location.href='index.html'">🏠 Menu</button>
-    <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
-  </div>
-
-  <h2 id="rezultat"></h2>
-  <p id="poruka"></p>
+    <div class="avg">
+        <div class="avg-number" id="rezultat">0.00</div>
+        <div class="small" id="poruka"></div>
+    </div>
 </div>
-
-<footer>Napravio Mario</footer>
 
 <script>
 // Tema
@@ -181,7 +188,7 @@ function izracunaj(){
     }
 
     let p=suma/count;
-    rezultat.innerText="Prosjek: "+p.toFixed(2);
+    rezultat.innerText=p.toFixed(2);
 
     poruka.innerText =
       p>=4.5 ? "🔥 Odličan!" :
@@ -194,7 +201,7 @@ function izracunaj(){
 function obrisiSve(){
     document.getElementById("ocjene").innerHTML = "";
     localStorage.removeItem("ocjene");
-    rezultat.innerText="";
+    rezultat.innerText="0.00";
     poruka.innerText="";
 }
 
@@ -207,11 +214,7 @@ function spremi(){
 
 function ucitaj(){
     const data = JSON.parse(localStorage.getItem("ocjene"));
-    if(data){
-        data.forEach(v=>dodaj(v));
-    } else {
-        dodaj();
-    }
+    if(data){ data.forEach(v=>dodaj(v)); } else dodaj();
 }
 ucitaj();
 
@@ -229,6 +232,5 @@ window.addEventListener('beforeinstallprompt', (e) => {
     });
 });
 </script>
-
 </body>
 </html>
