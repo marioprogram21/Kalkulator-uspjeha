@@ -4,131 +4,65 @@
 <meta charset="UTF-8">
 <title>Kalkulator ocjena</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ff9900">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
 
 <style>
-:root{
---bg:#121212;--text:#fff;--box:#1f1f1f;--accent:#ff9900;
-}
-body.light{--bg:#f5f5f5;--text:#121212;--box:#fff;--accent:#007bff;}
-
-body{
-background:var(--bg);
-color:var(--text);
-font-family:Arial;
-display:flex;
-flex-direction:column;
-align-items:center;
-min-height:100vh;
-padding:20px;
-}
-
-.box{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(15px);
-padding:25px;
-border-radius:25px;
-width:350px;
-}
-
-.ocjena-card{
-display:flex;
-justify-content:space-between;
-margin:8px 0;
-padding:10px;
-background:var(--bg);
-border-radius:12px;
-transition:0.3s;
-}
-.ocjena-card:hover{transform:scale(1.03);}
-
-input{
-width:60px;
-padding:8px;
-border-radius:6px;
-border:none;
-text-align:center;
-}
-
-button{
-padding:10px;
-border:none;
-border-radius:8px;
-background:var(--accent);
-color:var(--text);
-cursor:pointer;
-margin:3px;
-}
-.delete{background:red;}
-
+:root { --bg:#121212; --text:#fff; --box:#1f1f1f; --accent:#ff9900; }
+body.light { --bg:#f5f5f5; --text:#121212; --box:#fff; --accent:#007bff; }
+body { background:var(--bg); color:var(--text); font-family:'Arial',sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; margin:0; padding:20px; transition:0.3s;}
+h1 { margin-bottom:20px; }
+.box { background:var(--box); padding:25px; border-radius:20px; width:350px; box-shadow:0 0 25px rgba(0,0,0,0.4); display:flex; flex-direction:column; align-items:center; }
+.ocjena-card { display:flex; justify-content:space-between; margin:8px 0; padding:10px 15px; width:100%; background:var(--bg); border-radius:12px; }
+.ocjena-card input { width:60px; padding:8px; border-radius:6px; border:none; text-align:center; }
+.delete { background:red; color:white; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; }
+.btn-group { display:flex; gap:10px; flex-wrap:wrap; margin-top:15px; }
+button { padding:10px 15px; border:none; border-radius:8px; cursor:pointer; background:var(--accent); color:var(--text); font-weight:bold; }
+#rezultat { margin-top:15px; font-size:1.3em; }
+#poruka { margin-top:5px; }
+footer { margin-top:auto; opacity:0.7; }
 </style>
 </head>
-
 <body>
 
-<button onclick="location.href='index.html'">⬅ Nazad</button>
-
 <h1>Kalkulator ocjena</h1>
-
 <div class="box">
-<div id="ocjene"></div>
-
-<button onclick="dodaj()">+ Dodaj</button>
-<button onclick="izracunaj()">Izračunaj</button>
-<button onclick="obrisi()">Obriši</button>
-<button onclick="tema()">💡 Tema</button>
-
-<h2 id="rezultat"></h2>
+    <div id="ocjene"></div>
+    <div class="btn-group">
+        <button onclick="dodaj()">+ Dodaj</button>
+        <button onclick="izracunaj()">Izračunaj</button>
+        <button onclick="obrisiSve()">🗑 Obriši sve</button>
+        <button onclick="promijeniTemu()">💡 Tema</button>
+    </div>
+    <h2 id="rezultat"></h2>
+    <p id="poruka"></p>
 </div>
+<footer>Izradio Mario</footer>
 
 <script>
-function tema(){
-document.body.classList.toggle('light');
-localStorage.setItem('t',document.body.classList.contains('light'));
-}
-if(localStorage.getItem('t')==='true')document.body.classList.add('light');
+function promijeniTemu(){ document.body.classList.toggle('light'); localStorage.setItem('tema',document.body.classList.contains('light')?'light':'dark'); }
+if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 
 function dodaj(v=""){
-let d=document.createElement("div");
-d.className="ocjena-card";
-
-let i=document.createElement("input");
-i.type="number";i.value=v;
-
-let b=document.createElement("button");
-b.innerText="X";b.className="delete";
-b.onclick=()=>{d.remove();save();};
-
-d.append(i,b);
-ocjene.appendChild(d);
-save();
+    const div=document.getElementById('ocjene');
+    const wrap=document.createElement('div'); wrap.className='ocjena-card';
+    const input=document.createElement('input'); input.type='number'; input.placeholder='1-5'; input.value=v; input.oninput=spremi;
+    const btn=document.createElement('button'); btn.innerText='X'; btn.className='delete'; btn.onclick=()=>{ wrap.remove(); spremi(); };
+    wrap.appendChild(input); wrap.appendChild(btn); div.appendChild(wrap); spremi();
 }
-
 function izracunaj(){
-let s=0,c=0;
-document.querySelectorAll("input").forEach(i=>{
-let v=+i.value;
-if(v>=1&&v<=5){s+=v;c++;}
-});
-rezultat.innerText=c?("Prosjek: "+(s/c).toFixed(2)):"Unesi!";
+    const inputs=document.querySelectorAll('#ocjene input'); let suma=0, count=0;
+    inputs.forEach(i=>{ let v=Number(i.value); if(v>=1 && v<=5){ suma+=v; count++; }});
+    if(count===0){ rezultat.innerText='Unesi ocjene!'; poruka.innerText=''; return; }
+    let p=suma/count;
+    rezultat.innerText='Prosjek: '+p.toFixed(2);
+    poruka.innerText=p>=4.5?'🔥 Odličan!':p>=3.5?'👍 Vrlo dobar':p>=2.5?'🙂 Dobar':'😬 Moraš učiti';
 }
-
-function obrisi(){ocjene.innerHTML="";localStorage.removeItem("o");}
-
-function save(){
-let arr=[];
-document.querySelectorAll("input").forEach(i=>arr.push(i.value));
-localStorage.setItem("o",JSON.stringify(arr));
-}
-
-function load(){
-let d=JSON.parse(localStorage.getItem("o"));
-if(d)d.forEach(v=>dodaj(v));else dodaj();
-}
-load();
-
-// SW
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+function obrisiSve(){ document.getElementById('ocjene').innerHTML=''; localStorage.removeItem('ocjene'); rezultat.innerText=''; poruka.innerText=''; }
+function spremi(){ const arr=[]; document.querySelectorAll('#ocjene input').forEach(i=>arr.push(i.value)); localStorage.setItem('ocjene',JSON.stringify(arr)); }
+function ucitaj(){ const data=JSON.parse(localStorage.getItem('ocjene')); if(data){ data.forEach(v=>dodaj(v)); } else dodaj(); }
+ucitaj();
 </script>
-
 </body>
 </html>
