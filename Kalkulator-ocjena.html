@@ -31,7 +31,7 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    padding: 0; /* uklonjena vertikalna rupa */
+    padding: 0;
     transition: all 0.3s ease;
 }
 
@@ -80,16 +80,15 @@ body.light .ocjena-card { background: var(--box-light); }
     text-align: center;
 }
 
-/* Smanjene tipke za brisanje */
 .delete {
     background: var(--delete-color);
     color: white;
     border: none;
-    padding: 2px 4px;
-    border-radius: 6px;
+    padding: 1px 3px;
+    border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 0.75em;
+    font-size: 0.7em;
 }
 
 .btn-group {
@@ -101,10 +100,9 @@ body.light .ocjena-card { background: var(--box-light); }
     width: 100%;
 }
 
-/* Smanjeni gumb "🗑 Obriši sve" */
-.btn-group button:nth-child(3) {
-    padding: 8px 12px;
-    font-size: 0.9em;
+.btn-group button:nth-child(3) { /* 🗑 Obriši sve manji */
+    padding: 5px 8px;
+    font-size: 0.8em;
 }
 
 button {
