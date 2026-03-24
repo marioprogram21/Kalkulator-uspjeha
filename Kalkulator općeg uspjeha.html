@@ -2,105 +2,104 @@
 <html lang="hr">
 <head>
 <meta charset="UTF-8">
-<title>Opći uspjeh</title>
-<meta name="viewport" content="width=device-width">
-
+<title>Kalkulator općeg uspjeha</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ff9900">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
 <style>
-body{
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-background:linear-gradient(135deg,#667eea,#764ba2);
-font-family:Segoe UI;
-}
-
-.app{
-width:350px;
-padding:25px;
-border-radius:25px;
-background:rgba(255,255,255,0.2);
-backdrop-filter:blur(15px);
-}
-
-select,input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none;}
-
-button{
-width:100%;
-padding:10px;
-margin:5px 0;
-border:none;
-border-radius:10px;
-background:#333;
-color:white;
-}
-
-.card{
-display:flex;
-justify-content:space-between;
-background:white;
-padding:8px;
-border-radius:10px;
-margin-top:5px;
-}
-
+*{box-sizing:border-box;font-family:'Segoe UI',sans-serif;margin:0;padding:0;}
+body{height:100vh;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;justify-content:center;align-items:center;color:black;}
+.app{width:360px;padding:30px;border-radius:25px;background:rgba(255,255,255,0.85);box-shadow:0 15px 35px rgba(0,0,0,0.2);}
+h2{text-align:center;font-size:2em;margin-bottom:20px;color:black;}
+select,input[type=number]{width:100%;padding:12px;margin:8px 0;border:none;border-radius:12px;font-size:1em;background:white;color:black;}
+button{width:48%;padding:12px;margin:4px 0;border:none;border-radius:12px;font-weight:bold;background:#ff9900;color:white;cursor:pointer;transition:0.2s;}
+button:hover{background:#ffb74d;}
+.cards{margin-top:15px;}
+.card{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:14px;margin-top:6px;font-weight:bold;background:rgba(255,255,255,0.6);}
+.grade{text-align:right;width:20%;}
+.delete{background:rgba(0,0,0,0.1);border:none;color:black;border-radius:8px;cursor:pointer;padding:2px 6px;font-weight:bold;font-size:0.8em;transition:0.2s;}
+.delete:hover{background:rgba(0,0,0,0.2);}
+.avg{text-align:center;margin-top:20px;}
+.avg-number{font-size:48px;font-weight:bold;letter-spacing:1px;}
+.small{opacity:0.8;font-size:0.9em;}
+.btn-group{display:flex;justify-content:space-between;gap:10px;margin-top:10px;}
 </style>
 </head>
-
 <body>
 
 <div class="app">
-
-<button onclick="location.href='index.html'">⬅ Nazad</button>
-
-<h2>Kalkulator uspjeha</h2>
-
-<select id="s">
-<option value="">Predmet</option>
+<h2>Kalkulator općeg uspjeha</h2>
+<select id="subject">
+<option value="" disabled selected>Odaberi predmet</option>
 <option>Matematika</option>
-<option>Hrvatski</option>
+<option>Hrvatski jezik</option>
+<option>Engleski jezik</option>
+<option>Priroda</option>
+<option>Povijest</option>
+<option>Geografija</option>
+<option>Likovna kultura</option>
+<option>Glazbena kultura</option>
+<option>Tjelesna i zdravstvena kultura</option>
+<option>Tehnička kultura</option>
+<option>Informatika</option>
 </select>
-
-<input id="g" type="number" placeholder="Ocjena">
-
-<button onclick="add()">Dodaj</button>
-
-<div id="list"></div>
-
-<h1 id="avg">0.00</h1>
-
+<input type="number" id="grade" placeholder="Ocjena (1-5)" onkeypress="if(event.key==='Enter') add()">
+<div class="btn-group">
+<button onclick="add()">Dodaj ocjenu</button>
+<button onclick="removeAll()">Obriši sve</button>
+</div>
+<div class="cards" id="cards"></div>
+<div class="avg">
+<div class="avg-number" id="avg">0.00</div>
+<div class="small">Prosjek</div>
+</div>
+<footer style="margin-top:10px;font-size:0.8em;text-align:center;opacity:0.8;">Izradio Mario</footer>
 </div>
 
 <script>
-let arr=[];
+let grades = JSON.parse(localStorage.getItem("grades"))||[];
+
+function save(){localStorage.setItem("grades",JSON.stringify(grades));}
 
 function add(){
-let s=document.getElementById("s").value;
-let g=+document.getElementById("g").value;
-if(!s||g<1||g>5)return;
-
-arr.push({s,g});
-render();
+const subject=document.getElementById("subject").value;
+const grade=parseInt(document.getElementById("grade").value);
+if(!subject||grade<1||grade>5)return;
+grades.push({subject,grade});
+save(); render();
+document.getElementById("subject").selectedIndex=0;
+document.getElementById("grade").value="";
 }
+
+function remove(i){grades.splice(i,1);save();render();}
+function removeAll(){grades=[];save();render();}
 
 function render(){
-list.innerHTML="";
-let sum=0;
-
-arr.forEach((e,i)=>{
-sum+=e.g;
-let d=document.createElement("div");
-d.className="card";
-d.innerHTML=e.s+" "+e.g;
-list.appendChild(d);
+const container=document.getElementById("cards");
+container.innerHTML="";
+grades.forEach((g,i)=>{
+const card=document.createElement("div");
+card.className="card";
+card.innerHTML=`<span>${g.subject}</span><span class="grade">${g.grade}</span>`;
+const btn=document.createElement("button");
+btn.className="delete"; btn.textContent="x"; btn.onclick=()=>remove(i);
+card.appendChild(btn);
+container.appendChild(card);
 });
-
-avg.innerText=(sum/arr.length).toFixed(2);
+calc();
 }
 
-// SW
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+function calc(){
+if(grades.length===0){document.getElementById("avg").textContent="0.00"; return;}
+let sum=grades.reduce((a,b)=>a+b.grade,0);
+let avg=(sum/grades.length).toFixed(2);
+document.getElementById("avg").textContent=avg;
+}
+
+render();
 </script>
 
 </body>
+</html>
 </html>
