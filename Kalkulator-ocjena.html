@@ -10,14 +10,12 @@
 
 <style>
 :root {
-    /* TAMNA TEMA */
-    --bg-color: linear-gradient(135deg, #667eea, #764ba2);
-    --text-color: black;
-    --box-color: rgba(255,255,255,0.6);
-    --btn-color: #333;
+    --bg-color: linear-gradient(135deg, #667eea, #764ba2); /* tamno-plava */
+    --text-color: white;
+    --box-color: rgba(255,255,255,0.15); /* glass efekt */
+    --btn-color: #6c5ce7;
     --delete-color: red;
 
-    /* SVJETLA TEMA */
     --bg-light: linear-gradient(135deg, #f0e6ff, #e0d4ff);
     --text-light: black;
     --box-light: rgba(255,255,255,0.85);
@@ -37,19 +35,22 @@ body {
     transition: all 0.3s ease;
 }
 
-body.light {
+body.light { 
     background: var(--bg-light);
     color: var(--text-light);
 }
 
-h1 { margin-bottom: 20px; text-align:center; }
+h1 { 
+    margin: 0 0 20px 0; 
+    text-align: center; 
+}
 
 .box {
     background: var(--box-color);
     padding: 25px;
     border-radius: 20px;
     width: 360px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,7 +62,7 @@ body.light .box { background: var(--box-light); }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 8px 0;
+    margin: 6px 0;
     padding: 10px 12px;
     width: 100%;
     border-radius: 12px;
@@ -94,7 +95,7 @@ body.light .ocjena-card { background: var(--box-light); }
     justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 15px;
+    margin-top: 10px; /* manja udaljenost */
     width: 100%;
 }
 
@@ -113,11 +114,11 @@ body.light button { background: var(--btn-light); }
 
 button:hover { opacity: 0.85; }
 
-.avg { text-align: center; margin-top: 20px; }
+.avg { text-align: center; margin-top: 15px; }
 .avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; }
 .small { opacity: 0.8; font-size: 0.9em; }
 
-footer { margin-top: auto; opacity: 0.7; text-align:center; }
+footer { margin-top: 15px; opacity: 0.7; text-align:center; }
 </style>
 </head>
 
@@ -157,7 +158,7 @@ let grades = JSON.parse(localStorage.getItem("grades")) || [];
 
 function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
 
-function dodaj(v="", subject="Predmet") {
+function dodaj(v="") {
     const div = document.getElementById("ocjene");
     const wrap = document.createElement("div");
     wrap.className = "ocjena-card";
@@ -168,15 +169,11 @@ function dodaj(v="", subject="Predmet") {
     input.value = v;
     input.oninput = spremi;
 
-    const span = document.createElement("span");
-    span.textContent = subject;
-
     const btn = document.createElement("button");
     btn.innerText = "X";
     btn.className = "delete";
     btn.onclick = () => { wrap.remove(); spremi(); };
 
-    wrap.appendChild(span);
     wrap.appendChild(input);
     wrap.appendChild(btn);
     div.appendChild(wrap);
@@ -250,5 +247,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
     });
 });
 </script>
+
 </body>
 </html>
