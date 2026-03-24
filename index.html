@@ -12,13 +12,11 @@
     --bg-color: #121212;
     --text-color: #ffffff;
     --accent-color: #ff9900;
-    --hover-color: #ffa500;
 }
 body.light {
     --bg-color: #f5f5f5;
     --text-color: #121212;
     --accent-color: #007bff;
-    --hover-color: #3399ff;
 }
 body {
     background: var(--bg-color);
@@ -33,12 +31,7 @@ body {
     padding: 20px;
     transition: all 0.3s ease;
 }
-h1 {
-    margin-bottom: 30px;
-    text-align:center;
-    font-size: 2.2em;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
-}
+h1 { margin-bottom: 30px; text-align:center; }
 .menu-box {
     display: flex;
     flex-direction: column;
@@ -48,33 +41,18 @@ h1 {
 button {
     padding: 15px 25px;
     border: none;
-    border-radius: 14px;
+    border-radius: 12px;
     cursor: pointer;
     background: var(--accent-color);
     color: var(--text-color);
     font-weight: bold;
     font-size: 1.1em;
-    width: 240px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
+    width: 220px;
+    transition: 0.2s;
 }
-button:hover {
-    background: var(--hover-color);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
-}
-#installBtn {
-    display: none;
-    background: #28a745;
-}
-#installBtn:hover {
-    background: #45c261;
-}
-footer {
-    margin-top: 50px;
-    opacity: 0.7;
-    font-size: 0.9em;
-}
+button:hover { background: #ffa500; }
+#installBtn { display: none; }
+footer { margin-top: 50px; opacity: 0.7; font-size: 0.9em; }
 </style>
 </head>
 <body>
@@ -91,8 +69,8 @@ footer {
 <footer>Napravio Mario</footer>
 
 <script>
-// Tema
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
+
 function promijeniTemu(){
     document.body.classList.toggle('light');
     localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
@@ -105,13 +83,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
     deferredPrompt = e;
     const btn = document.getElementById('installBtn');
     btn.style.display = 'block';
-    btn.onclick = () => {
+    btn.addEventListener('click', () => {
         btn.style.display = 'none';
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-    };
+    });
 });
 </script>
-
 </body>
 </html>
