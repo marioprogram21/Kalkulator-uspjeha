@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <title>Kalkulator uspjeha</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#8e44ad">
+<meta name="theme-color" content="#1a237e">
 <link rel="manifest" href="manifest.json">
 
 <style>
 :root {
-    --bg-color: #f0e6ff;        /* svijetla, vesela ljubičasta pozadina */
-    --text-color: #2c2c2c;      /* tamno siva za tekst */
-    --card-color: #ffffff;       /* bijele kartice */
+    --bg-color: #1a237e;        /* tamno plava pozadina */
+    --text-color: #ffffff;      /* bijeli tekst */
+    --card-color: #2c2c54;      /* tamnije kartice/gumbi */
     --accent-color: #6c5ce7;    /* ljubičasto-plavi gumbi */
     --hover-color: #5a4fcf;     /* tamniji hover za gumb */
 }
@@ -77,9 +77,6 @@ footer {
 <footer>Napravio Mario</footer>
 
 <script>
-// Tema PWA (svijetla tema)
-if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
-
 // PWA Instalacija
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
