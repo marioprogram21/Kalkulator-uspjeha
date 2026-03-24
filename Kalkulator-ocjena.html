@@ -4,22 +4,22 @@
 <meta charset="UTF-8">
 <title>Kalkulator ocjena</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#ff9900">
+<meta name="theme-color" content="#1a237e">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
 
 <style>
 :root {
-  --bg-color: #121212;
-  --text-color: #fff;
-  --box-color: #1f1f1f;
-  --accent-color: #ff9900;
+  --bg-color: #1a237e;      /* TAMNO PLAVA */
+  --text-color: #ffffff;
+  --box-color: #283593;     /* kartica */
+  --accent-color: #6c5ce7;  /* gumbi */
 }
 body.light {
-  --bg-color: #f5f5f5;
-  --text-color: #121212;
+  --bg-color: #f0e6ff;      /* svijetla tema */
+  --text-color: #2c2c2c;
   --box-color: #ffffff;
-  --accent-color: #007bff;
+  --accent-color: #6c5ce7;
 }
 body {
   background: var(--bg-color);
@@ -34,6 +34,7 @@ body {
   transition: all 0.3s ease;
 }
 h1 { margin-bottom: 20px; }
+
 .box {
   background: var(--box-color);
   padding: 25px;
@@ -44,15 +45,17 @@ h1 { margin-bottom: 20px; }
   flex-direction: column;
   align-items: center;
 }
+
 .ocjena-card {
   display: flex;
   justify-content: space-between;
   margin: 8px 0;
   padding: 10px 15px;
   width: 100%;
-  background: var(--bg-color);
+  background: rgba(255,255,255,0.1); /* GLASS efekt */
   border-radius: 12px;
 }
+
 .ocjena-card input {
   width: 60px;
   padding: 8px;
@@ -60,23 +63,47 @@ h1 { margin-bottom: 20px; }
   border: none;
   text-align: center;
 }
-.delete { background: red; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
-.btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; width: 100%; justify-content: center; }
+
+.delete { 
+  background: red; 
+  color: white; 
+  border: none; 
+  padding: 5px 10px; 
+  border-radius: 6px; 
+  cursor: pointer; 
+}
+
+.btn-group { 
+  display: flex; 
+  gap: 10px; 
+  flex-wrap: wrap; 
+  margin-top: 15px; 
+  width: 100%; 
+  justify-content: center; 
+}
+
 button {
   padding: 10px 15px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   background: var(--accent-color);
-  color: var(--text-color);
+  color: #fff;
   font-weight: bold;
   min-width: 100px;
   transition: 0.2s;
 }
+
 button:hover { opacity: 0.85; }
+
 #rezultat { margin-top: 15px; font-size: 1.3em; }
 #poruka { margin-top: 5px; text-align:center; }
-footer { margin-top: auto; opacity: 0.7; text-align:center; }
+
+footer { 
+  margin-top: auto; 
+  opacity: 0.7; 
+  text-align:center; 
+}
 </style>
 </head>
 <body>
@@ -85,6 +112,7 @@ footer { margin-top: auto; opacity: 0.7; text-align:center; }
 
 <div class="box">
   <div id="ocjene"></div>
+
   <div class="btn-group">
     <button onclick="dodaj()">+ Dodaj</button>
     <button onclick="izracunaj()">Izračunaj</button>
@@ -93,6 +121,7 @@ footer { margin-top: auto; opacity: 0.7; text-align:center; }
     <button onclick="window.location.href='index.html'">🏠 Menu</button>
     <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
   </div>
+
   <h2 id="rezultat"></h2>
   <p id="poruka"></p>
 </div>
@@ -134,11 +163,29 @@ function dodaj(v=""){
 function izracunaj(){
     const inputs = document.querySelectorAll("#ocjene input");
     let suma=0, count=0;
-    inputs.forEach(i=>{ let v=Number(i.value); if(v>=1 && v<=5){ suma+=v; count++; }} );
-    if(count===0){ rezultat.innerText="Unesi ocjene!"; poruka.innerText=""; return; }
+
+    inputs.forEach(i=>{
+        let v=Number(i.value);
+        if(v>=1 && v<=5){
+            suma+=v;
+            count++;
+        }
+    });
+
+    if(count===0){
+        rezultat.innerText="Unesi ocjene!";
+        poruka.innerText="";
+        return;
+    }
+
     let p=suma/count;
     rezultat.innerText="Prosjek: "+p.toFixed(2);
-    poruka.innerText = p>=4.5 ? "🔥 Odličan!" : p>=3.5 ? "👍 Vrlo dobar" : p>=2.5 ? "🙂 Dobar" : "😬 Moraš učiti";
+
+    poruka.innerText =
+      p>=4.5 ? "🔥 Odličan!" :
+      p>=3.5 ? "👍 Vrlo dobar" :
+      p>=2.5 ? "🙂 Dobar" :
+      "😬 Moraš učiti";
 }
 
 // Obriši sve
@@ -155,9 +202,14 @@ function spremi(){
     document.querySelectorAll("#ocjene input").forEach(i=>arr.push(i.value));
     localStorage.setItem("ocjene", JSON.stringify(arr));
 }
+
 function ucitaj(){
     const data = JSON.parse(localStorage.getItem("ocjene"));
-    if(data){ data.forEach(v=>dodaj(v)); } else dodaj();
+    if(data){
+        data.forEach(v=>dodaj(v));
+    } else {
+        dodaj();
+    }
 }
 ucitaj();
 
@@ -171,7 +223,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     btn.addEventListener('click', () => {
         btn.style.display = 'none';
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choiceResult => { deferredPrompt = null; });
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
     });
 });
 </script>
