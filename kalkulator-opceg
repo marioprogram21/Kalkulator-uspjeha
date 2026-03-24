@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<title>Kalkulator općeg uspjeha</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ff9900">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+
+<style>
+* { box-sizing:border-box; font-family:'Segoe UI',sans-serif; margin:0; padding:0; }
+body { height:100vh; display:flex; justify-content:center; align-items:center; background:linear-gradient(135deg,#667eea,#764ba2); color:black;}
+.app { width:360px; padding:30px; border-radius:25px; background:rgba(255,255,255,0.85); box-shadow:0 15px 35px rgba(0,0,0,0.2); }
+h2 { text-align:center; font-size:2em; font-weight:bold; margin-bottom:20px; }
+select, input[type=number] { width:100%; padding:12px; margin:8px 0; border:none; border-radius:12px; font-size:1em; background:white; color:black; }
+button { padding:10px; margin:5px 0; border:none; border-radius:12px; font-weight:bold; background:#333; color:white; cursor:pointer; transition:0.2s; }
+button:hover{ background:#555; }
+.cards{ margin-top:15px; }
+.card{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:14px; margin-top:6px; font-weight:bold; box-shadow:0 4px 15px rgba(0,0,0,0.1); background:rgba(255,255,255,0.6);}
+.grade{ text-align:right; width:20%; }
+.delete{ background:rgba(0,0,0,0.1); border:none; color:black; border-radius:8px; cursor:pointer; padding:2px 6px; font-weight:bold; font-size:0.8em; transition:0.2s;}
+.delete:hover{ background:rgba(0,0,0,0.2);}
+.avg{ text-align:center; margin-top:20px; }
+.avg-number{ font-size:48px; font-weight:bold; letter-spacing:1px; }
+.small{ opacity:0.8; font-size:0.9em;}
+.btn-group{ display:flex; justify-content:space-between; gap:10px; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="app">
+<h2>Kalkulator općeg uspjeha</h2>
+<select id="subject">
+<option value="" disabled selected>Odaberi predmet</option>
+<option>Matematika</option>
+<option>Hrvatski jezik</option>
+<option>Engleski jezik</option>
+<option>Priroda</option>
+<option>Povijest</option>
+<option>Geografija</option>
+<option>Likovna kultura</option>
+<option>Glazbena kultura</option>
+<option>Tjelesna i zdravstvena kultura</option>
+<option>Tehnička kultura</option>
+<option>Informatika</option>
+</select>
+<input type="number" id="grade" placeholder="Ocjena (1-5)" onkeypress="handleEnter(event)">
+<div class="btn-group">
+<button onclick="add()">Dodaj ocjenu</button>
+<button onclick="removeAll()">Obriši sve</button>
+</div>
+<div class="cards" id="cards"></div>
+<div class="avg">
+<div class="avg-number" id="avg">0.00</div>
+<div class="small">Prosjek</div>
+</div>
+</div>
+<script>
+let grades=JSON.parse(localStorage.getItem("grades"))||[];
+function save(){ localStorage.setItem("grades",JSON.stringify(grades)); }
+function handleEnter(e){ if(e.key==="Enter") add(); }
+function add(){ const subject=document.getElementById("subject").value; const grade=parseInt(document.getElementById("grade").value); if(!subject||grade<1||grade>5) return; grades.push({subject,grade}); save(); render(); document.getElementById("subject").selectedIndex=0; document.getElementById("grade").value=""; }
+function remove(i){ grades.splice(i,1); save(); render(); }
+function removeAll(){ grades=[]; save(); render(); }
+function render(){ const container=document.getElementById("cards"); container.innerHTML=""; grades.forEach((g,i)=>{ const card=document.createElement("div"); card.className="card g"+g.grade; card.innerHTML=`<span>${g.subject}</span><span class="grade">${g.grade}</span>`; const btn=document.createElement("button"); btn.className="delete"; btn.textContent="x"; btn.onclick=()=>remove(i); card.appendChild(btn); container.appendChild(card); }); calc(); }
+function calc(){ if(grades.length===0){ document.getElementById("avg").textContent="0.00"; return; } let sum=grades.reduce((a,b)=>a+b.grade,0); let avg=(sum/grades.length).toFixed(2); const avgElem=document.getElementById("avg"); avgElem.textContent=avg; if(avg>=4.5) avgElem.style.color="green"; else if(avg>=3.5) avgElem.style.color="orange"; else avgElem.style.color="red"; }
+render();
+</script>
+</body>
+</html>
