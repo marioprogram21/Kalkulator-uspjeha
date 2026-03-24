@@ -18,6 +18,7 @@
     --bg-light: linear-gradient(135deg, #f0e6ff, #e0d4ff);
     --text-light: black;
     --box-light: rgba(255,255,255,0.85);
+    --btn-light: #6c5ce7;
 }
 
 body {
@@ -37,20 +38,20 @@ body.light {
 
 h1 {
     margin: 10px 0;
+    padding: 10px 0;
+    text-align: center;
 }
 
-/* 🔥 GLAVNI FIX */
 .box {
     background: var(--box-color);
-    padding: 15px;
+    padding: 10px 15px;
     border-radius: 20px;
     width: 360px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px; /* sve kontrolira */
+    gap: 4px;
 }
 body.light .box { background: var(--box-light); }
 
@@ -65,10 +66,11 @@ body.light .box { background: var(--box-light); }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 10px;
+    padding: 6px 8px;
     width: 100%;
     border-radius: 12px;
     background: var(--box-color);
+    font-weight: bold;
 }
 body.light .ocjena-card { background: var(--box-light); }
 
@@ -80,29 +82,28 @@ body.light .ocjena-card { background: var(--box-light); }
     text-align: center;
 }
 
-/* veći X */
 .delete {
-    background: red;
+    background: var(--delete-color);
     color: white;
     border: none;
-    padding: 4px 8px;
+    padding: 6px 12px; /* veći X */
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 1em;
 }
 
-/* nema rupe */
 .btn-group {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
     margin: 0;
 }
 
 button {
-    padding: 8px 12px;
+    padding: 6px 10px;
     border: none;
     border-radius: 10px;
     background: var(--btn-color);
@@ -111,16 +112,16 @@ button {
     cursor: pointer;
 }
 
+button:hover { opacity: 0.85; }
+
 .avg {
     text-align: center;
-    margin: 0;
+    margin: 4px 0;
 }
-
 .avg-number {
     font-size: 32px;
     font-weight: bold;
 }
-
 .small {
     font-size: 0.9em;
 }
@@ -128,6 +129,7 @@ button {
 footer {
     margin: 10px 0;
     opacity: 0.7;
+    text-align:center;
 }
 </style>
 </head>
@@ -160,7 +162,7 @@ function promijeniTemu(){
     document.body.classList.toggle('light');
 }
 
-// dodaj
+// dodavanje ocjena
 function dodaj(v=""){
     const div = document.getElementById("ocjene");
 
@@ -182,7 +184,7 @@ function dodaj(v=""){
     div.appendChild(wrap);
 }
 
-// izračun
+// izračun prosjeka
 function izracunaj(){
     const inputs = document.querySelectorAll("#ocjene input");
     let sum=0, count=0;
@@ -199,7 +201,7 @@ function izracunaj(){
         count ? (sum/count).toFixed(2) : "0.00";
 }
 
-// briši
+// briši sve
 function obrisiSve(){
     document.getElementById("ocjene").innerHTML="";
 }
