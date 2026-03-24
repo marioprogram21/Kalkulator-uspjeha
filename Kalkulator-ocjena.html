@@ -10,18 +10,23 @@
 
 <style>
 :root {
-    --bg-dark: linear-gradient(135deg, #667eea, #764ba2);  /* tamna ljubičasto-plava */
-    --bg-light: linear-gradient(135deg, #f0e6ff, #e0d4ff); /* svijetla tema */
-    --text-dark: black;
-    --text-light: #2c2c2c;
-    --card-dark: rgba(255,255,255,0.6);
-    --card-light: rgba(255,255,255,0.85);
-    --btn-dark: #333;
+    /* TAMNA TEMA */
+    --bg-color: linear-gradient(135deg, #667eea, #764ba2);
+    --text-color: black;
+    --box-color: rgba(255,255,255,0.6);
+    --btn-color: #333;
+    --delete-color: red;
+
+    /* SVJETLA TEMA */
+    --bg-light: linear-gradient(135deg, #f0e6ff, #e0d4ff);
+    --text-light: black;
+    --box-light: rgba(255,255,255,0.85);
     --btn-light: #6c5ce7;
 }
+
 body {
-    background: var(--bg-dark);
-    color: var(--text-dark);
+    background: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Segoe UI', sans-serif;
     display: flex;
     flex-direction: column;
@@ -38,8 +43,9 @@ body.light {
 }
 
 h1 { margin-bottom: 20px; text-align:center; }
+
 .box {
-    background: var(--card-dark);
+    background: var(--box-color);
     padding: 25px;
     border-radius: 20px;
     width: 360px;
@@ -47,22 +53,22 @@ h1 { margin-bottom: 20px; text-align:center; }
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
 }
-body.light .box { background: var(--card-light); }
+body.light .box { background: var(--box-light); }
 
 .ocjena-card {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin: 8px 0;
     padding: 10px 12px;
     width: 100%;
     border-radius: 12px;
+    background: var(--box-color);
     font-weight: bold;
-    background: rgba(255,255,255,0.6);
-    transition: background 0.3s ease;
 }
-body.light .ocjena-card { background: rgba(255,255,255,0.85); }
+body.light .ocjena-card { background: var(--box-light); }
 
 .ocjena-card input {
     width: 60px;
@@ -73,7 +79,7 @@ body.light .ocjena-card { background: rgba(255,255,255,0.85); }
 }
 
 .delete {
-    background: red;
+    background: var(--delete-color);
     color: white;
     border: none;
     padding: 2px 6px;
@@ -98,28 +104,24 @@ button {
     border-radius: 12px;
     font-size: 1em;
     font-weight: bold;
-    background: var(--btn-dark);
+    background: var(--btn-color);
     color: white;
     cursor: pointer;
     transition: 0.2s;
 }
-body.light button { background: var(--btn-light); color: white; }
+body.light button { background: var(--btn-light); }
+
 button:hover { opacity: 0.85; }
 
-.cards { margin-top: 15px; }
-
 .avg { text-align: center; margin-top: 20px; }
-.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; color:black; }
-body.light .avg-number { color: black; }
-.small { opacity: 0.8; font-size: 0.9em; color:black; }
-body.light .small { color:black; }
+.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; }
+.small { opacity: 0.8; font-size: 0.9em; }
 
 footer { margin-top: auto; opacity: 0.7; text-align:center; }
-
 </style>
 </head>
-<body>
 
+<body>
 <h1>Kalkulator ocjena</h1>
 
 <div class="box">
@@ -133,8 +135,6 @@ footer { margin-top: auto; opacity: 0.7; text-align:center; }
         <button onclick="window.location.href='index.html'">🏠 Menu</button>
         <button id="installBtn" style="display:none;">📲 Instaliraj app</button>
     </div>
-
-    <div class="cards" id="cards"></div>
 
     <div class="avg">
         <div class="avg-number" id="avg">0.00</div>
@@ -157,52 +157,84 @@ let grades = JSON.parse(localStorage.getItem("grades")) || [];
 
 function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
 
-function add() {
-    const subject = prompt("Unesi predmet:") || "";
-    const grade = parseInt(prompt("Unesi ocjenu (1-5):") || 0);
-    if (!subject || grade < 1 || grade > 5) return;
-    grades.push({ subject, grade });
-    save();
-    render();
+function dodaj(v="", subject="Predmet") {
+    const div = document.getElementById("ocjene");
+    const wrap = document.createElement("div");
+    wrap.className = "ocjena-card";
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.placeholder = "1-5";
+    input.value = v;
+    input.oninput = spremi;
+
+    const span = document.createElement("span");
+    span.textContent = subject;
+
+    const btn = document.createElement("button");
+    btn.innerText = "X";
+    btn.className = "delete";
+    btn.onclick = () => { wrap.remove(); spremi(); };
+
+    wrap.appendChild(span);
+    wrap.appendChild(input);
+    wrap.appendChild(btn);
+    div.appendChild(wrap);
+    spremi();
 }
 
-function remove(i) { grades.splice(i, 1); save(); render(); }
+function izracunaj(){
+    const inputs = document.querySelectorAll("#ocjene input");
+    let suma=0, count=0;
 
-function removeAll() { grades = []; save(); render(); }
-
-function render() {
-    const container = document.getElementById("cards");
-    container.innerHTML = "";
-    grades.forEach((g, i) => {
-        const card = document.createElement("div");
-        card.className = "ocjena-card";
-        card.innerHTML = `<span>${g.subject}</span>
-                          <span class="grade">${g.grade}</span>`;
-        const btn = document.createElement("button");
-        btn.className = "delete";
-        btn.textContent = "x";
-        btn.onclick = () => remove(i);
-        card.appendChild(btn);
-        container.appendChild(card);
+    inputs.forEach(i=>{
+        let v=Number(i.value);
+        if(v>=1 && v<=5){
+            suma+=v;
+            count++;
+        }
     });
-    calc();
-}
 
-function calc() {
-    if (grades.length === 0) {
-        document.getElementById("avg").textContent = "0.00";
+    const rezultat = document.getElementById("avg");
+    const poruka = document.querySelector(".small");
+
+    if(count===0){
+        rezultat.textContent="0.00";
+        poruka.textContent="";
         return;
     }
-    let sum = grades.reduce((a,b)=>a+b.grade,0);
-    let avg = (sum / grades.length).toFixed(2);
-    const avgElem = document.getElementById("avg");
-    avgElem.textContent = avg;
-    if(avg>=4.5) avgElem.style.color = "green";
-    else if(avg>=3.5) avgElem.style.color = "orange";
-    else avgElem.style.color = "red";
+
+    let p=suma/count;
+    rezultat.textContent = p.toFixed(2);
+    poruka.textContent =
+      p>=4.5 ? "🔥 Odličan!" :
+      p>=3.5 ? "👍 Vrlo dobar" :
+      p>=2.5 ? "🙂 Dobar" :
+      "😬 Moraš učiti";
 }
 
-render();
+// Obriši sve
+function obrisiSve(){
+    document.getElementById("ocjene").innerHTML = "";
+    grades = [];
+    save();
+    izracunaj();
+}
+
+// Storage
+function spremi(){
+    const arr=[];
+    document.querySelectorAll("#ocjene input").forEach(i=>arr.push(i.value));
+    localStorage.setItem("grades", JSON.stringify(arr));
+}
+
+function ucitaj(){
+    const data = JSON.parse(localStorage.getItem("grades"));
+    if(data && data.length>0){
+        data.forEach(v=>dodaj(v));
+    } else dodaj();
+}
+ucitaj();
 
 // PWA Instalacija
 let deferredPrompt;
@@ -218,6 +250,5 @@ window.addEventListener('beforeinstallprompt', (e) => {
     });
 });
 </script>
-
 </body>
 </html>
