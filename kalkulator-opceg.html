@@ -13,17 +13,16 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: black;
 }
 
 .app {
     width: 360px;
     padding: 30px;
     border-radius: 25px;
-    background: rgba(255,255,255,0.95); /* svjetlija, ali tekst kontrastan */
+    background: rgba(255,255,255,0.95);
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     animation: fadeIn 0.6s ease;
-    color: #111; /* tamni tekst da se vidi */
+    color: #111;
 }
 
 h2 {
@@ -74,12 +73,13 @@ button:hover { background: #555; }
     font-weight: bold;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: transform 0.2s, box-shadow 0.2s;
-    background: rgba(255,255,255,0.7);
+    background: rgba(240,240,240,0.9);
+    color: #111;
 }
 
 .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
 
-.card span { font-size: 1em; color: #111; width: 70%; }
+.card span { font-size: 1em; width: 70%; }
 
 .grade { text-align: right; width: 20%; }
 
@@ -154,53 +154,35 @@ button:hover { background: #555; }
 </div>
 
 <script>
-// Učitavanje i zamjena starih naziva predmeta
 let grades = JSON.parse(localStorage.getItem("grades") || "[]");
-
-// Zamijeni stare "Priroda" sa "Biologija (Priroda)"
-grades = grades.map(g => {
-    if(g.subject === "Priroda") g.subject = "Biologija (Priroda)";
-    return g;
-});
-
-// Filtriraj samo ispravne ocjene
+grades = grades.map(g => { if(g.subject === "Priroda") g.subject = "Biologija (Priroda)"; return g; });
 grades = grades.filter(g => g.subject && !isNaN(g.grade));
 
-function save() { 
-    localStorage.setItem("grades", JSON.stringify(grades)); 
-}
-
+function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
 function handleEnter(e) { if (e.key === "Enter") add(); }
 
 function add() {
     const subject = document.getElementById("subject").value;
     const grade = parseInt(document.getElementById("grade").value);
-
     if (!subject || grade < 1 || grade > 5) return;
-
     grades.push({ subject, grade });
     save();
     render();
-
     document.getElementById("subject").selectedIndex = 0;
     document.getElementById("grade").value = "";
 }
 
 function remove(i) { grades.splice(i, 1); save(); render(); }
-
 function removeAll() { grades = []; save(); render(); }
 
 function render() {
     const container = document.getElementById("cards");
     container.innerHTML = "";
-
     grades = grades.filter(g => g.subject && !isNaN(g.grade));
-
     grades.forEach((g, i) => {
         const card = document.createElement("div");
         card.className = `card g${g.grade}`;
-        card.innerHTML = `<span>${g.subject}</span>
-                          <span class="grade">${g.grade}</span>`;
+        card.innerHTML = `<span>${g.subject}</span><span class="grade">${g.grade}</span>`;
         const btn = document.createElement("button");
         btn.className = "delete";
         btn.textContent = "x";
@@ -208,22 +190,15 @@ function render() {
         card.appendChild(btn);
         container.appendChild(card);
     });
-
     calc();
 }
 
 function calc() {
-    if (grades.length === 0) {
-        document.getElementById("avg").textContent = "0.00";
-        return;
-    }
-
+    if (grades.length === 0) { document.getElementById("avg").textContent = "0.00"; return; }
     let sum = grades.reduce((a,b)=>a+b.grade,0);
     let avg = (sum / grades.length).toFixed(2);
-
     const avgElem = document.getElementById("avg");
     avgElem.textContent = avg;
-
     if(avg>=4.5) avgElem.style.color = "green";
     else if(avg>=3.5) avgElem.style.color = "orange";
     else avgElem.style.color = "red";
