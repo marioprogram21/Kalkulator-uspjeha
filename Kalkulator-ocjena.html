@@ -48,14 +48,15 @@ h1 {
 
 .box {
     background: var(--box-color);
-    padding: 25px;
+    padding: 30px;             /* više paddinga za udaljeniji izgled */
     border-radius: 20px;
-    width: 380px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    width: 320px;              /* manja širina = udaljeniji ekran */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
     transition: all 0.5s ease;
+    transform: scale(0.98);
 }
 body.light .box { background: var(--box-light); }
 
@@ -71,7 +72,8 @@ body.light .box { background: var(--box-light); }
     font-weight: bold;
     gap: 10px;
     transform: scale(0);
-    animation: cardIn 0.3s forwards;
+    animation: cardIn 0.5s forwards;
+    transition: all 0.3s;
 }
 body.light .ocjena-card { background: var(--box-light); }
 
@@ -93,9 +95,9 @@ body.light .ocjena-card { background: var(--box-light); }
     cursor: pointer;
     font-weight: bold;
     font-size: 0.9em;
-    transition: 0.2s;
+    transition: all 0.3s;
 }
-.delete:hover { opacity: 0.8; }
+.delete:hover { opacity: 0.8; transform: scale(1.05); }
 
 .btn-group {
     display: flex;
@@ -115,21 +117,44 @@ button {
     background: var(--btn-color);
     color: white;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s;
 }
 body.light button { background: var(--btn-light); }
-button:hover { opacity: 0.85; }
+button:hover { transform: scale(1.05); opacity: 0.85; }
 
 .avg { text-align: center; margin-top: 15px; }
-.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; margin-bottom:4px; transition: all 0.3s; }
-.small-label { opacity: 0.7; font-size: 0.8em; margin-top:4px; }
-.small { opacity: 0.85; font-size: 0.9em; margin-top:2px; transition: all 0.3s; }
+.avg-number { 
+    font-size: 50px; 
+    font-weight: bold; 
+    letter-spacing: 1px; 
+    margin-bottom:4px; 
+    transition: all 0.5s ease; 
+    animation: bounce 0.6s; 
+}
+.small-label { 
+    opacity: 0.7; 
+    font-size: 0.8em; 
+    margin-top:4px; 
+    animation: fadeIn 0.7s;
+}
+.small { 
+    opacity: 0.85; 
+    font-size: 0.9em; 
+    margin-top:2px; 
+    animation: fadeIn 0.7s;
+}
 
-footer { margin-top: 20px; opacity: 0.7; text-align:center; }
+footer { margin-top: 20px; opacity:0.7; text-align:center; }
 
 /* Animacije */
 @keyframes cardIn { from { transform: scale(0.5); opacity:0; } to { transform: scale(1); opacity:1; } }
 @keyframes fadeTheme { from {opacity:0.5;} to {opacity:1;} }
+@keyframes bounce {
+    0% { transform: translateY(-10px); }
+    50% { transform: translateY(5px); }
+    100% { transform: translateY(0); }
+}
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
 </style>
 </head>
 
@@ -190,6 +215,7 @@ function dodaj(v="") {
     wrap.appendChild(input);
     wrap.appendChild(btn);
     div.appendChild(wrap);
+    wrap.style.animation = "cardIn 0.5s forwards";
     spremi();
     izracunaj();
 }
@@ -215,15 +241,15 @@ function izracunaj(){
     let p=suma/count;
     rezultat.textContent = p.toFixed(2);
 
-    // poruka koja uvijek pokazuje stanje
     poruka.textContent =
       p>=4.5 ? "🔥 Odličan!" :
       p>=3.5 ? "👍 Vrlo dobar" :
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
 
-    // boja broja prosjeka
+    // animacija boje i bounce
     rezultat.style.color = p>=4.5 ? "lightgreen" : p>=3.5 ? "orange" : p>=2.5 ? "yellow" : "red";
+    rezultat.style.animation = "bounce 0.6s";
 }
 
 function obrisiSve(){
