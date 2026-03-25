@@ -48,15 +48,15 @@ h1 {
 
 .box {
     background: var(--box-color);
-    padding: 35px;           /* veći padding */
+    padding: 35px;
     border-radius: 20px;
-    width: 280px;            /* manja širina = više udaljeno */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.4); /* jači shadow */
+    width: 280px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
     transition: all 0.5s ease;
-    transform: scale(0.95);  /* manja skala = udaljeniji efekt */
+    transform: scale(0.95);
 }
 body.light .box { background: var(--box-light); }
 
@@ -71,8 +71,9 @@ body.light .box { background: var(--box-light); }
     background: var(--box-color);
     font-weight: bold;
     gap: 10px;
-    transform: scale(0);
-    animation: cardIn 0.5s forwards;
+    transform: scale(0.9);
+    opacity: 0;
+    animation: cardFadeScale 0.5s forwards;
     transition: all 0.3s;
 }
 body.light .ocjena-card { background: var(--box-light); }
@@ -120,7 +121,7 @@ button {
     transition: all 0.3s;
 }
 body.light button { background: var(--btn-light); }
-button:hover { transform: scale(1.1); opacity: 0.85; }
+button:hover { transform: scale(1.05); opacity: 0.85; }
 
 .avg { text-align: center; margin-top: 20px; }
 .avg-number { 
@@ -129,33 +130,41 @@ button:hover { transform: scale(1.1); opacity: 0.85; }
     letter-spacing: 1px; 
     margin-bottom:4px; 
     transition: all 0.5s ease; 
-    animation: bounce 0.6s; 
+    animation: avgAppear 0.5s;
 }
 .small-label { 
     opacity: 0.7; 
     font-size: 0.8em; 
     margin-top:4px; 
-    animation: fadeIn 0.7s;
+    animation: fadeIn 0.5s;
 }
 .small { 
     opacity: 0.85; 
     font-size: 0.9em; 
     margin-top:2px; 
-    animation: fadeIn 0.7s;
+    animation: fadeIn 0.5s;
 }
-
-footer { margin-top: 25px; opacity:0.7; text-align:center; }
 
 /* Animacije */
-@keyframes cardIn { from { transform: scale(0.5); opacity:0; } to { transform: scale(1); opacity:1; } }
-@keyframes fadeTheme { from {opacity:0.5;} to {opacity:1;} }
-@keyframes bounce {
-    0% { transform: translateY(-12px); }
-    50% { transform: translateY(6px); }
-    100% { transform: translateY(0); }
+@keyframes cardFadeScale {
+    0% { opacity:0; transform: scale(0.8) translateY(-10px); }
+    100% { opacity:1; transform: scale(1) translateY(0); }
+}
+@keyframes avgAppear {
+    0% { opacity:0; transform: translateY(-10px) scale(0.95); }
+    50% { opacity:1; transform: translateY(3px) scale(1.02); }
+    100% { opacity:1; transform: translateY(0) scale(1); }
 }
 @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-
+@keyframes pulseMsg {
+    0%,100% { transform: scale(1); opacity:0.85; }
+    50% { transform: scale(1.05); opacity:1; }
+}
+@keyframes bounce {
+    0% { transform: translateY(-6px); }
+    50% { transform: translateY(3px); }
+    100% { transform: translateY(0); }
+}
 </style>
 </head>
 
@@ -211,12 +220,16 @@ function dodaj(v="") {
     const btn = document.createElement("button");
     btn.innerText = "X";
     btn.className = "delete";
-    btn.onclick = () => { wrap.remove(); spremi(); izracunaj(); };
+    btn.onclick = () => { 
+        wrap.style.opacity = "0";
+        wrap.style.transform = "scale(0.8) translateY(-10px)";
+        setTimeout(()=> { wrap.remove(); spremi(); izracunaj(); }, 300);
+    };
 
     wrap.appendChild(input);
     wrap.appendChild(btn);
     div.appendChild(wrap);
-    wrap.style.animation = "cardIn 0.5s forwards";
+    wrap.style.animation = "cardFadeScale 0.5s forwards";
     spremi();
     izracunaj();
 }
@@ -242,14 +255,20 @@ function izracunaj(){
     let p=suma/count;
     rezultat.textContent = p.toFixed(2);
 
+    // Animacija prosjeka
+    rezultat.style.animation = "avgAppear 0.5s";
+
     poruka.textContent =
       p>=4.5 ? "🔥 Odličan!" :
       p>=3.5 ? "👍 Vrlo dobar" :
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
 
+    // Lagana animacija poruke
+    poruka.style.animation = "pulseMsg 1s ease-in-out";
+
+    // Boja prosjeka
     rezultat.style.color = p>=4.5 ? "lightgreen" : p>=3.5 ? "orange" : p>=2.5 ? "yellow" : "red";
-    rezultat.style.animation = "bounce 0.6s";
 }
 
 function obrisiSve(){
