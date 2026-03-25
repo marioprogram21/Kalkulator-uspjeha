@@ -1,3 +1,157 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<title>Kalkulator općeg uspjeha</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin:0; padding:0; }
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.app {
+    width: 360px;
+    padding: 30px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.85);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    animation: fadeIn 0.6s ease;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: black;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+}
+
+select, input[type=number] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 12px;
+    outline: none;
+    font-size: 1em;
+    background: white;
+    color: black; 
+}
+
+button {
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: bold;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover { background: #555; }
+
+.cards { margin-top: 15px; }
+
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 14px;
+    margin-top: 6px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: rgba(255,255,255,0.6);
+}
+
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+.card span { font-size: 1em; color: black; width: 70%; }
+
+.grade { text-align: right; width: 20%; }
+
+.delete {
+    background: rgba(0,0,0,0.1);
+    border: none;
+    color: black;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 2px 6px;
+    font-weight: bold;
+    transition: background 0.2s;
+    font-size: 0.8em;
+}
+
+.delete:hover { background: rgba(0,0,0,0.2); }
+
+.avg { text-align: center; margin-top: 20px; }
+.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; color:black; }
+.small { opacity: 0.8; font-size: 0.9em; color:black; }
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+@keyframes fadeIn { from {opacity:0; transform: translateY(25px);} to {opacity:1; transform: translateY(0);} }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <h2>Kalkulator općeg uspjeha</h2>
+
+    <select id="subject">
+        <option value="" disabled selected>Odaberi predmet</option>
+        <option>Matematika</option>
+        <option>Hrvatski jezik</option>
+        <option>Engleski jezik</option>
+        <option>Biologija (Priroda)</option>
+        <option>Povijest</option>
+        <option>Geografija</option>
+        <option>Likovna kultura</option>
+        <option>Glazbena kultura</option>
+        <option>Tjelesna i zdravstvena kultura</option>
+        <option>Tehnička kultura</option>
+        <option>Informatika</option>
+        <option>Njemački jezik (Deutsch)</option>
+        <option>Francuski jezik (Français)</option>
+        <option>Fizika</option>
+        <option>Kemija</option>
+        <option>Vjeronauk</option>
+    </select>
+
+    <input type="number" id="grade" placeholder="Ocjena (1-5)" onkeypress="handleEnter(event)">
+
+    <div class="btn-group">
+        <button onclick="add()">Dodaj ocjenu</button>
+        <button onclick="removeAll()">Obriši sve</button>
+        <button onclick="window.location.href='index.html'">🏠 Menu</button>
+    </div>
+
+    <div class="cards" id="cards"></div>
+
+    <div class="avg">
+        <div class="avg-number" id="avg">0.00</div>
+        <div class="small">Prosjek</div>
+    </div>
+</div>
+
 <script>
 // Učitavanje i zamjena starih naziva predmeta
 let grades = JSON.parse(localStorage.getItem("grades") || "[]");
@@ -16,22 +170,6 @@ function save() {
 }
 
 function handleEnter(e) { if (e.key === "Enter") add(); }
-
-// ✅ DODANO — provjera i dodavanje predmeta
-function ensureSubjects() {
-    const select = document.getElementById("subject");
-
-    const needed = ["Fizika", "Kemija", "Vjeronauk"];
-
-    needed.forEach(sub => {
-        const exists = Array.from(select.options).some(opt => opt.text === sub);
-        if (!exists) {
-            const option = document.createElement("option");
-            option.text = sub;
-            select.appendChild(option);
-        }
-    });
-}
 
 function add() {
     const subject = document.getElementById("subject").value;
@@ -90,7 +228,8 @@ function calc() {
     else avgElem.style.color = "red";
 }
 
-// ✅ DODANO — poziv funkcije
-ensureSubjects();
 render();
 </script>
+
+</body>
+</html>
