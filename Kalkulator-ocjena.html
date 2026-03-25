@@ -121,8 +121,9 @@ body.light button { background: var(--btn-light); }
 button:hover { opacity: 0.85; }
 
 .avg { text-align: center; margin-top: 15px; }
-.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; transition: all 0.3s; }
-.small { opacity: 0.8; font-size: 0.9em; transition: all 0.3s; }
+.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; margin-bottom:4px; transition: all 0.3s; }
+.small-label { opacity: 0.7; font-size: 0.8em; margin-top:4px; }
+.small { opacity: 0.85; font-size: 0.9em; margin-top:2px; transition: all 0.3s; }
 
 footer { margin-top: 20px; opacity: 0.7; text-align:center; }
 
@@ -149,7 +150,8 @@ footer { margin-top: 20px; opacity: 0.7; text-align:center; }
 
     <div class="avg">
         <div class="avg-number" id="avg">0.00</div>
-        <div class="small">Prosjek</div>
+        <div class="small-label">Prosjek</div>
+        <div class="small" id="avg-msg"></div>
     </div>
 </div>
 
@@ -202,7 +204,7 @@ function izracunaj(){
     });
 
     const rezultat = document.getElementById("avg");
-    const poruka = document.querySelector(".small");
+    const poruka = document.getElementById("avg-msg");
 
     if(count===0){
         rezultat.textContent="0.00";
@@ -212,13 +214,15 @@ function izracunaj(){
 
     let p=suma/count;
     rezultat.textContent = p.toFixed(2);
+
+    // poruka koja uvijek pokazuje stanje
     poruka.textContent =
       p>=4.5 ? "🔥 Odličan!" :
       p>=3.5 ? "👍 Vrlo dobar" :
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
 
-    // boja prosjeka
+    // boja broja prosjeka
     rezultat.style.color = p>=4.5 ? "lightgreen" : p>=3.5 ? "orange" : p>=2.5 ? "yellow" : "red";
 }
 
