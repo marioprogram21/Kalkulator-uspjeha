@@ -10,9 +10,9 @@
 
 <style>
 :root {
-    --bg-color: linear-gradient(135deg, #667eea, #764ba2); /* tamno-plava */
+    --bg-color: linear-gradient(135deg, #667eea, #764ba2);
     --text-color: white;
-    --box-color: rgba(255,255,255,0.15); /* glass efekt */
+    --box-color: rgba(255,255,255,0.15);
     --btn-color: #6c5ce7;
     --delete-color: red;
 
@@ -48,15 +48,15 @@ h1 {
 
 .box {
     background: var(--box-color);
-    padding: 30px;             /* više paddinga za udaljeniji izgled */
+    padding: 35px;           /* veći padding */
     border-radius: 20px;
-    width: 320px;              /* manja širina = udaljeniji ekran */
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    width: 280px;            /* manja širina = više udaljeno */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4); /* jači shadow */
     display: flex;
     flex-direction: column;
     align-items: center;
     transition: all 0.5s ease;
-    transform: scale(0.98);
+    transform: scale(0.95);  /* manja skala = udaljeniji efekt */
 }
 body.light .box { background: var(--box-light); }
 
@@ -78,7 +78,7 @@ body.light .box { background: var(--box-light); }
 body.light .ocjena-card { background: var(--box-light); }
 
 .ocjena-card input {
-    width: 80px;
+    width: 70px;
     padding: 10px;
     border-radius: 8px;
     border: none;
@@ -120,11 +120,11 @@ button {
     transition: all 0.3s;
 }
 body.light button { background: var(--btn-light); }
-button:hover { transform: scale(1.05); opacity: 0.85; }
+button:hover { transform: scale(1.1); opacity: 0.85; }
 
-.avg { text-align: center; margin-top: 15px; }
+.avg { text-align: center; margin-top: 20px; }
 .avg-number { 
-    font-size: 50px; 
+    font-size: 52px; 
     font-weight: bold; 
     letter-spacing: 1px; 
     margin-bottom:4px; 
@@ -144,17 +144,18 @@ button:hover { transform: scale(1.05); opacity: 0.85; }
     animation: fadeIn 0.7s;
 }
 
-footer { margin-top: 20px; opacity:0.7; text-align:center; }
+footer { margin-top: 25px; opacity:0.7; text-align:center; }
 
 /* Animacije */
 @keyframes cardIn { from { transform: scale(0.5); opacity:0; } to { transform: scale(1); opacity:1; } }
 @keyframes fadeTheme { from {opacity:0.5;} to {opacity:1;} }
 @keyframes bounce {
-    0% { transform: translateY(-10px); }
-    50% { transform: translateY(5px); }
+    0% { transform: translateY(-12px); }
+    50% { transform: translateY(6px); }
     100% { transform: translateY(0); }
 }
 @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+
 </style>
 </head>
 
@@ -247,7 +248,6 @@ function izracunaj(){
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
 
-    // animacija boje i bounce
     rezultat.style.color = p>=4.5 ? "lightgreen" : p>=3.5 ? "orange" : p>=2.5 ? "yellow" : "red";
     rezultat.style.animation = "bounce 0.6s";
 }
