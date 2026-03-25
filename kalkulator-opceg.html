@@ -20,17 +20,18 @@ body {
     width: 360px;
     padding: 30px;
     border-radius: 25px;
-    background: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.95); /* svjetlija, ali tekst kontrastan */
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     animation: fadeIn 0.6s ease;
+    color: #111; /* tamni tekst da se vidi */
 }
 
 h2 {
     text-align: center;
     font-size: 2em;
     font-weight: bold;
-    color: black;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    color: #111;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     margin-bottom: 20px;
 }
 
@@ -43,7 +44,7 @@ select, input[type=number] {
     outline: none;
     font-size: 1em;
     background: white;
-    color: black; 
+    color: #111; 
 }
 
 button {
@@ -73,19 +74,19 @@ button:hover { background: #555; }
     font-weight: bold;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: transform 0.2s, box-shadow 0.2s;
-    background: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.7);
 }
 
 .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
 
-.card span { font-size: 1em; color: black; width: 70%; }
+.card span { font-size: 1em; color: #111; width: 70%; }
 
 .grade { text-align: right; width: 20%; }
 
 .delete {
     background: rgba(0,0,0,0.1);
     border: none;
-    color: black;
+    color: #111;
     border-radius: 8px;
     cursor: pointer;
     padding: 2px 6px;
@@ -97,8 +98,8 @@ button:hover { background: #555; }
 .delete:hover { background: rgba(0,0,0,0.2); }
 
 .avg { text-align: center; margin-top: 20px; }
-.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; color:black; }
-.small { opacity: 0.8; font-size: 0.9em; color:black; }
+.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; color:#111; }
+.small { opacity: 0.8; font-size: 0.9em; color:#111; }
 
 .btn-group {
     display: flex;
