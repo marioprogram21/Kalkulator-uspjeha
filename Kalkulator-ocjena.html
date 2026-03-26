@@ -54,17 +54,6 @@ h1 {
     background: var(--box-color);
     font-weight: bold;
     gap: 10px;
-    transform: scale(0.9);
-}
-
-.ocjena-card.animate {
-    animation: cardIn 0.4s forwards;
-}
-
-@keyframes cardIn {
-    0% { transform: scale(0.8) translateY(-10px); }
-    60% { transform: scale(1.05) translateY(3px); }
-    100% { transform: scale(1); }
 }
 
 .ocjena-card input {
@@ -116,19 +105,11 @@ button {
     font-size: 48px; 
     font-weight: bold; 
     letter-spacing: 1px; 
-    transition: all 0.3s; 
 }
 
 .small { 
     opacity: 0.8; 
     font-size: 0.9em; 
-    transition: all 0.3s; 
-}
-
-@keyframes avgPop {
-    0% { transform: scale(0.7); }
-    60% { transform: scale(1.2); }
-    100% { transform: scale(1); }
 }
 
 footer { margin-top: 20px; opacity: 0.7; text-align:center; }
@@ -174,9 +155,6 @@ function dodaj() {
     wrap.appendChild(input);
     wrap.appendChild(btn);
     div.appendChild(wrap);
-
-    // animacija kartice
-    requestAnimationFrame(() => wrap.classList.add("animate"));
 }
 
 function izracunaj(){
@@ -200,17 +178,12 @@ function izracunaj(){
     let p=suma/count;
     avg.textContent = p.toFixed(2);
 
-    avg.style.animation="none";
-    avg.offsetHeight;
-    avg.style.animation="avgPop 0.4s";
-
     msg.textContent =
       p>=4.5 ? "🔥 Odličan!" :
       p>=3.5 ? "👍 Vrlo dobar" :
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
 
-    // boja prosjeka
     avg.style.color = p>=4.5 ? "lightgreen" : p>=3.5 ? "orange" : p>=2.5 ? "yellow" : "red";
 }
 
@@ -222,5 +195,6 @@ function obrisiSve(){
 // start s jednom karticom
 dodaj();
 </script>
+
 </body>
 </html>
