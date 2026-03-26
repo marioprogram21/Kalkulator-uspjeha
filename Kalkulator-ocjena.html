@@ -11,17 +11,25 @@
     --text-color: white;
     --box-color: rgba(255,255,255,0.15);
     --btn-color: #6c5ce7;
+    --delete-color: red;
 }
 
 body {
     background: var(--bg-color);
     color: var(--text-color);
-    font-family: sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 100vh;
     margin: 0;
-    padding: 20px;
+    padding: 20px 0 40px 0;
+}
+
+h1 { 
+    margin: 0;
+    padding: 20px 0 10px 0;
+    text-align: center; 
 }
 
 .box {
@@ -29,85 +37,123 @@ body {
     padding: 25px;
     border-radius: 20px;
     width: 380px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .ocjena-card {
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
     margin: 8px 0;
-    padding: 12px;
+    padding: 12px 15px;
+    width: 100%;
     border-radius: 14px;
-    background: rgba(255,255,255,0.2);
+    background: var(--box-color);
+    font-weight: bold;
+    gap: 10px;
     transform: scale(0.9);
 }
 
 .ocjena-card.animate {
-    animation: cardIn 0.4s ease forwards;
+    animation: cardIn 0.4s forwards;
 }
 
 @keyframes cardIn {
     0% { transform: scale(0.8) translateY(-10px); }
-    60% { transform: scale(1.08) translateY(3px); }
+    60% { transform: scale(1.05) translateY(3px); }
     100% { transform: scale(1); }
 }
 
-input {
+.ocjena-card input {
     width: 80px;
     padding: 10px;
     border-radius: 8px;
     border: none;
     text-align: center;
+    font-size: 1.1em;
+}
+
+.delete {
+    background: var(--delete-color);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
 }
 
 button {
-    padding: 10px;
-    border-radius: 8px;
+    padding: 10px 18px;
     border: none;
-    background: #6c5ce7;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: bold;
+    background: var(--btn-color);
     color: white;
     cursor: pointer;
-    margin-top: 5px;
 }
 
-.avg {
-    text-align: center;
-    margin-top: 15px;
+.avg { 
+    text-align: center; 
+    margin-top: 15px; 
 }
 
-.avg-number {
-    font-size: 48px;
+.avg-number { 
+    font-size: 48px; 
+    font-weight: bold; 
+    letter-spacing: 1px; 
+    transition: all 0.3s; 
 }
 
-/* prosjek animacija */
+.small { 
+    opacity: 0.8; 
+    font-size: 0.9em; 
+    transition: all 0.3s; 
+}
+
 @keyframes avgPop {
     0% { transform: scale(0.7); }
     60% { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
 
-.msg {
-    margin-top: 5px;
-}
+footer { margin-top: 20px; opacity: 0.7; text-align:center; }
 </style>
 </head>
 
 <body>
+<h1>Kalkulator ocjena</h1>
 
-<h2>Kalkulator ocjena</h2>
-
-<div class="box">
+<div class="box" id="box">
     <div id="ocjene"></div>
 
-    <button onclick="dodaj()">+ Dodaj</button>
-    <button onclick="izracunaj()">Izračunaj</button> <!-- ostaje tipka -->
-
-    <button onclick="obrisiSve()">Obriši sve</button>
+    <div class="btn-group">
+        <button onclick="dodaj()">+ Dodaj</button>
+        <button onclick="izracunaj()">Izračunaj</button>
+        <button onclick="obrisiSve()">🗑 Obriši sve</button>
+    </div>
 
     <div class="avg">
-        <div id="avg" class="avg-number">0.00</div>
-        <div id="msg" class="msg"></div>
+        <div class="avg-number" id="avg">0.00</div>
+        <div class="small" id="msg">Prosjek</div>
     </div>
 </div>
+
+<footer>Napravio Mario</footer>
 
 <script>
 function dodaj() {
@@ -122,6 +168,7 @@ function dodaj() {
 
     const btn = document.createElement("button");
     btn.innerText = "X";
+    btn.className = "delete";
     btn.onclick = () => wrap.remove();
 
     wrap.appendChild(input);
@@ -129,13 +176,11 @@ function dodaj() {
     div.appendChild(wrap);
 
     // animacija kartice
-    requestAnimationFrame(() => {
-        wrap.classList.add("animate");
-    });
+    requestAnimationFrame(() => wrap.classList.add("animate"));
 }
 
 function izracunaj(){
-    const inputs = document.querySelectorAll("#ocjene input"); // samo kartice
+    const inputs = document.querySelectorAll("#ocjene input");
     let suma=0, count=0;
 
     inputs.forEach(i=>{
@@ -148,14 +193,13 @@ function izracunaj(){
 
     if(count===0){
         avg.textContent="0.00";
-        msg.textContent="";
+        msg.textContent="Prosjek";
         return;
     }
 
     let p=suma/count;
-    avg.textContent=p.toFixed(2);
+    avg.textContent = p.toFixed(2);
 
-    // animacija prosjeka
     avg.style.animation="none";
     avg.offsetHeight;
     avg.style.animation="avgPop 0.4s";
@@ -165,6 +209,9 @@ function izracunaj(){
       p>=3.5 ? "👍 Vrlo dobar" :
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
+
+    // boja prosjeka
+    avg.style.color = p>=4.5 ? "lightgreen" : p>=3.5 ? "orange" : p>=2.5 ? "yellow" : "red";
 }
 
 function obrisiSve(){
@@ -172,9 +219,8 @@ function obrisiSve(){
     izracunaj();
 }
 
-// start
+// start s jednom karticom
 dodaj();
 </script>
-
 </body>
 </html>
