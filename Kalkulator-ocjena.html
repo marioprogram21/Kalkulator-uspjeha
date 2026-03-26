@@ -39,10 +39,9 @@ body {
     border-radius: 14px;
     background: rgba(255,255,255,0.2);
 
-    transform: scale(0.8);
+    transform: scale(0.9);
 }
 
-/* SAMO TRANSFORM – NEMA OPACITY */
 .ocjena-card.animate {
     animation: cardIn 0.4s ease forwards;
 }
@@ -79,15 +78,11 @@ button {
     font-size: 48px;
 }
 
-/* PROSJEK ANIMACIJA */
+/* prosjek animacija */
 @keyframes avgPop {
     0% { transform: scale(0.7); }
     60% { transform: scale(1.2); }
     100% { transform: scale(1); }
-}
-
-.msg {
-    margin-top: 5px;
 }
 </style>
 </head>
@@ -101,10 +96,11 @@ button {
 
     <button onclick="dodaj()">+ Dodaj</button>
     <button onclick="izracunaj()">Izračunaj</button>
+    <button onclick="obrisiSve()">Obriši sve</button>
 
     <div class="avg">
         <div id="avg" class="avg-number">0.00</div>
-        <div class="msg" id="msg"></div>
+        <div id="msg"></div>
     </div>
 </div>
 
@@ -117,6 +113,7 @@ function dodaj() {
 
     const input = document.createElement("input");
     input.type = "number";
+    input.placeholder = "1-5";
 
     const btn = document.createElement("button");
     btn.innerText = "X";
@@ -126,14 +123,13 @@ function dodaj() {
     wrap.appendChild(btn);
     div.appendChild(wrap);
 
-    // 🔥 SIGURNO POKRETANJE ANIMACIJE
     requestAnimationFrame(() => {
         wrap.classList.add("animate");
     });
 }
 
 function izracunaj(){
-    const inputs = document.querySelectorAll("input");
+    const inputs = document.querySelectorAll("#ocjene input"); // 🔥 FIX
     let suma=0, count=0;
 
     inputs.forEach(i=>{
@@ -153,7 +149,6 @@ function izracunaj(){
     let p=suma/count;
     avg.textContent=p.toFixed(2);
 
-    // reset + animacija
     avg.style.animation="none";
     avg.offsetHeight;
     avg.style.animation="avgPop 0.4s";
@@ -163,6 +158,11 @@ function izracunaj(){
       p>=3.5 ? "👍 Vrlo dobar" :
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
+}
+
+function obrisiSve(){
+    document.getElementById("ocjene").innerHTML="";
+    izracunaj();
 }
 
 // start
