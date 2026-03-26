@@ -50,7 +50,7 @@ h1 {
     background: var(--box-color);
     padding: 25px;
     border-radius: 20px;
-    width: 440px; /* povećana širina */
+    width: 440px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
@@ -72,13 +72,12 @@ body.light .box { background: var(--box-light); }
     gap: 10px;
     transform: scale(0.9);
     opacity: 0;
-    animation: cardFadeBounce 0.6s forwards;
     transition: all 0.3s;
 }
 body.light .ocjena-card { background: var(--box-light); }
 
 .ocjena-card input {
-    width: 100px; /* šire input polje */
+    width: 100px;
     padding: 10px;
     border-radius: 8px;
     border: none;
@@ -109,7 +108,7 @@ body.light .ocjena-card { background: var(--box-light); }
 }
 
 button {
-    padding: 12px 20px; /* veći buttoni */
+    padding: 12px 20px;
     border: none;
     border-radius: 12px;
     font-size: 1em;
@@ -187,17 +186,22 @@ button:hover { transform: scale(1.05); opacity: 0.85; }
 // Tema
 function promijeniTemu(){
     document.body.classList.toggle('light');
-    document.getElementById("box").style.animation = "fadeTheme 0.5s";
     localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
 }
 if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 
-// Dodavanje ocjena
+// Ocjene
 let grades = JSON.parse(localStorage.getItem("grades")) || [];
 
-function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
+function spremi(){
+    grades = [];
+    document.querySelectorAll("#ocjene input").forEach(i => {
+        if(i.value.trim()!=="") grades.push(i.value);
+    });
+    localStorage.setItem("grades", JSON.stringify(grades));
+}
 
-function dodaj(v="") {
+function dodaj(v=""){
     const div = document.getElementById("ocjene");
     const wrap = document.createElement("div");
     wrap.className = "ocjena-card";
@@ -211,7 +215,7 @@ function dodaj(v="") {
     const btn = document.createElement("button");
     btn.innerText = "X";
     btn.className = "delete";
-    btn.onclick = () => { 
+    btn.onclick = () => {
         wrap.style.opacity = "0";
         wrap.style.transform = "scale(0.8) translateY(-10px)";
         setTimeout(()=> { wrap.remove(); spremi(); izracunaj(); }, 300);
@@ -220,8 +224,10 @@ function dodaj(v="") {
     wrap.appendChild(input);
     wrap.appendChild(btn);
     div.appendChild(wrap);
-    wrap.style.animation = "cardFadeBounce 0.6s forwards";
-    spremi();
+
+    // animacija
+    setTimeout(()=> { wrap.style.opacity = "1"; wrap.style.transform = "scale(1) translateY(0)"; }, 50);
+
     izracunaj();
 }
 
@@ -246,8 +252,8 @@ function izracunaj(){
     let p=suma/count;
     rezultat.textContent = p.toFixed(2);
 
-    // Animacija prosjeka
     rezultat.style.animation = "avgPop 0.6s";
+    poruka.style.animation = "pulseMsg 1s ease-in-out";
 
     poruka.textContent =
       p>=4.5 ? "🔥 Odličan!" :
@@ -255,31 +261,20 @@ function izracunaj(){
       p>=2.5 ? "🙂 Dobar" :
       "😬 Moraš učiti";
 
-    // Animacija poruke
-    poruka.style.animation = "pulseMsg 1s ease-in-out";
-
-    // Boja prosjeka
     rezultat.style.color = p>=4.5 ? "lightgreen" : p>=3.5 ? "orange" : p>=2.5 ? "yellow" : "red";
 }
 
 function obrisiSve(){
-    const div = document.getElementById("ocjene");
-    div.innerHTML = "";
-    grades = [];
+    document.getElementById("ocjene").innerHTML = "";
+    grades=[];
     save();
     izracunaj();
 }
 
-// Storage
-function spremi(){
-    grades = [];
-    document.querySelectorAll("#ocjene input").forEach(i=>grades.push(i.value));
-    localStorage.setItem("grades", JSON.stringify(grades));
-}
-
 function ucitaj(){
     const data = JSON.parse(localStorage.getItem("grades"));
-    if(data && data.length>0){ data.forEach(v=>dodaj(v)); } else dodaj();
+    if(data && data.length>0) data.forEach(v=>dodaj(v));
+    else dodaj(); // barem jedan input
 }
 ucitaj();
 
@@ -297,6 +292,5 @@ window.addEventListener('beforeinstallprompt', (e) => {
     });
 });
 </script>
-
 </body>
 </html>
