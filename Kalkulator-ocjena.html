@@ -11,17 +11,15 @@
     --text-color: white;
     --box-color: rgba(255,255,255,0.15);
     --btn-color: #6c5ce7;
-    --delete-color: red;
 }
 
 body {
     background: var(--bg-color);
     color: var(--text-color);
-    font-family: 'Segoe UI', sans-serif;
+    font-family: sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
     margin: 0;
     padding: 20px;
 }
@@ -31,7 +29,6 @@ body {
     padding: 25px;
     border-radius: 20px;
     width: 380px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 .ocjena-card {
@@ -41,14 +38,22 @@ body {
     padding: 12px;
     border-radius: 14px;
     background: rgba(255,255,255,0.2);
+
+    transform: scale(0.8);
 }
 
-/* ANIMACIJA SE AKTIVIRA KLASOM */
+/* SAMO TRANSFORM – NEMA OPACITY */
 .ocjena-card.animate {
-    animation: cardIn 0.5s ease;
+    animation: cardIn 0.4s ease forwards;
 }
 
-.ocjena-card input {
+@keyframes cardIn {
+    0% { transform: scale(0.8) translateY(-10px); }
+    60% { transform: scale(1.08) translateY(3px); }
+    100% { transform: scale(1); }
+}
+
+input {
     width: 80px;
     padding: 10px;
     border-radius: 8px;
@@ -56,21 +61,11 @@ body {
     text-align: center;
 }
 
-.delete {
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    cursor: pointer;
-}
-
 button {
-    margin-top: 10px;
-    padding: 10px 15px;
+    padding: 10px;
+    border-radius: 8px;
     border: none;
-    border-radius: 10px;
-    background: var(--btn-color);
+    background: #6c5ce7;
     color: white;
     cursor: pointer;
 }
@@ -82,20 +77,17 @@ button {
 
 .avg-number {
     font-size: 48px;
-    font-weight: bold;
 }
 
-/* ANIMACIJE */
-@keyframes cardIn {
-    0% { transform: scale(0.7) translateY(-10px); opacity:0; }
-    60% { transform: scale(1.1) translateY(3px); opacity:1; }
+/* PROSJEK ANIMACIJA */
+@keyframes avgPop {
+    0% { transform: scale(0.7); }
+    60% { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
 
-@keyframes avgPop {
-    0% { transform: scale(0.7); opacity:0; }
-    60% { transform: scale(1.2); }
-    100% { transform: scale(1); opacity:1; }
+.msg {
+    margin-top: 5px;
 }
 </style>
 </head>
@@ -112,12 +104,12 @@ button {
 
     <div class="avg">
         <div id="avg" class="avg-number">0.00</div>
-        <div id="msg"></div>
+        <div class="msg" id="msg"></div>
     </div>
 </div>
 
 <script>
-function dodaj(v="") {
+function dodaj() {
     const div = document.getElementById("ocjene");
 
     const wrap = document.createElement("div");
@@ -125,22 +117,19 @@ function dodaj(v="") {
 
     const input = document.createElement("input");
     input.type = "number";
-    input.value = v;
 
     const btn = document.createElement("button");
     btn.innerText = "X";
-    btn.className = "delete";
-
     btn.onclick = () => wrap.remove();
 
     wrap.appendChild(input);
     wrap.appendChild(btn);
     div.appendChild(wrap);
 
-    // 🔥 TRIGGER ANIMACIJE NAKON DODAVANJA
-    setTimeout(() => {
+    // 🔥 SIGURNO POKRETANJE ANIMACIJE
+    requestAnimationFrame(() => {
         wrap.classList.add("animate");
-    }, 10);
+    });
 }
 
 function izracunaj(){
@@ -164,10 +153,10 @@ function izracunaj(){
     let p=suma/count;
     avg.textContent=p.toFixed(2);
 
-    // animacija prosjeka
+    // reset + animacija
     avg.style.animation="none";
-    void avg.offsetWidth; // reset animacije
-    avg.style.animation="avgPop 0.5s";
+    avg.offsetHeight;
+    avg.style.animation="avgPop 0.4s";
 
     msg.textContent =
       p>=4.5 ? "🔥 Odličan!" :
