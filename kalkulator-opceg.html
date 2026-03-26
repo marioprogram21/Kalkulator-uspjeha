@@ -25,16 +25,24 @@ body {
     color: #111;
 }
 
-/* Uređen naslov */
+/* Istaknutiji naslov */
 h2 {
     text-align: center;
-    font-size: 2.4em;
-    font-weight: bold;
-    margin-bottom: 20px;
-    background: linear-gradient(90deg, #ff9a9e, #fad0c4, #667eea);
+    font-size: 3em; /* veći font */
+    font-weight: 900; /* deblje slovo */
+    margin-bottom: 30px; /* više prostora ispod */
+    background: linear-gradient(90deg, #ff9a9e, #fad0c4, #667eea, #89f7fe);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 3px 10px rgba(0,0,0,0.35);
+    text-shadow: 0 5px 20px rgba(0,0,0,0.45); /* jači shadow */
+    animation: titlePop 0.8s ease-out; /* animacija naslova */
+}
+
+/* Animacija naslova */
+@keyframes titlePop {
+    0% { transform: scale(0.8) translateY(-20px); opacity: 0; }
+    50% { transform: scale(1.2) translateY(0); opacity: 1; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 select, input[type=number] {
@@ -216,7 +224,6 @@ function calc() {
     let sum = grades.reduce((a,b)=>a+b.grade,0);
     let avg = (sum / grades.length).toFixed(2);
     avgElem.textContent = avg;
-    // Animacija pop
     avgElem.style.animation = "avgPop 0.8s";
     if(avg>=4.5) avgElem.style.color = "green";
     else if(avg>=3.5) avgElem.style.color = "orange";
