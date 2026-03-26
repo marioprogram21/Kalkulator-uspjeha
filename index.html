@@ -36,17 +36,23 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Naslov sa gradientom i shadow efektom */
+/* Uređen naslov sa gradientom i animacijom */
 h1 {
     margin-bottom: 40px;
     text-align: center;
     font-size: 3em;
-    font-weight: bold;
+    font-weight: 900;
     background: linear-gradient(90deg, #ff9a9e, #fad0c4, #667eea);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 4px 15px rgba(0,0,0,0.35);
-    animation: fadeIn 0.8s ease;
+    animation: popTitle 0.8s ease;
+}
+
+@keyframes popTitle {
+    0% { transform: scale(0.8) translateY(-20px); opacity: 0; }
+    50% { transform: scale(1.2) translateY(5px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); }
 }
 
 .menu-box {
@@ -81,12 +87,6 @@ footer {
     opacity: 0.7;
     font-size: 0.9em;
     color: var(--text-color);
-}
-
-/* Animacija fadeIn */
-@keyframes fadeIn { 
-    from {opacity:0; transform: translateY(25px);} 
-    to {opacity:1; transform: translateY(0);} 
 }
 </style>
 </head>
