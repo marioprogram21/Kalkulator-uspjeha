@@ -19,18 +19,21 @@ body {
     width: 360px;
     padding: 30px;
     border-radius: 25px;
-    background: #f0f0f0; /* tamnija pozadina da tekst bude vidljiv */
+    background: #f0f0f0;
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     animation: fadeIn 0.6s ease;
-    color: #111; /* tamni tekst */
+    color: #111;
 }
 
 h2 {
     text-align: center;
-    font-size: 2em;
+    font-size: 2.2em;
     font-weight: bold;
-    color: #111;
     margin-bottom: 20px;
+    background: linear-gradient(90deg, #ff9a9e, #fad0c4, #667eea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
 select, input[type=number] {
@@ -72,7 +75,7 @@ button:hover { background: #555; }
     font-weight: bold;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: transform 0.2s, box-shadow 0.2s;
-    background: #e0e0e0; /* kontrastna pozadina kartica */
+    background: #e0e0e0;
     color: #111;
 }
 
@@ -97,7 +100,13 @@ button:hover { background: #555; }
 .delete:hover { background: rgba(0,0,0,0.2); }
 
 .avg { text-align: center; margin-top: 20px; }
-.avg-number { font-size: 48px; font-weight: bold; letter-spacing: 1px; color:#111; }
+.avg-number { 
+    font-size: 48px; 
+    font-weight: bold; 
+    letter-spacing: 1px; 
+    color:#111; 
+    transition: all 0.5s ease;
+}
 .small { opacity: 0.8; font-size: 0.9em; color:#111; }
 
 .btn-group {
@@ -108,6 +117,12 @@ button:hover { background: #555; }
 }
 
 @keyframes fadeIn { from {opacity:0; transform: translateY(25px);} to {opacity:1; transform: translateY(0);} }
+@keyframes avgPop {
+    0% { opacity:0; transform: scale(0.8) translateY(-10px); }
+    50% { transform: scale(1.3) translateY(-5px); opacity:1; }
+    70% { transform: scale(0.9) translateY(3px); }
+    100% { transform: scale(1) translateY(0); }
+}
 </style>
 </head>
 
@@ -193,11 +208,13 @@ function render() {
 }
 
 function calc() {
-    if (grades.length === 0) { document.getElementById("avg").textContent = "0.00"; return; }
+    const avgElem = document.getElementById("avg");
+    if (grades.length === 0) { avgElem.textContent = "0.00"; avgElem.style.color = "#111"; return; }
     let sum = grades.reduce((a,b)=>a+b.grade,0);
     let avg = (sum / grades.length).toFixed(2);
-    const avgElem = document.getElementById("avg");
     avgElem.textContent = avg;
+    // Animacija pop
+    avgElem.style.animation = "avgPop 0.8s";
     if(avg>=4.5) avgElem.style.color = "green";
     else if(avg>=3.5) avgElem.style.color = "orange";
     else avgElem.style.color = "red";
