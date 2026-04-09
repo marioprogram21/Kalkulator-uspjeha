@@ -5,53 +5,45 @@
 <title>Kalkulator ocjena</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#5b6cff">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon.png">
 
 <style>
 :root {
-    --bg-color: linear-gradient(135deg, #5b6cff, #7c4dff);
+    --bg-color: linear-gradient(135deg, #3a4edb, #6a5cff);
     --text-color: #ffffff;
-    --box-color: rgba(255, 255, 255, 0.14);
-    --btn-color: #6d5efc;
-    --delete-color: #ff4b5c;
+    --box-color: rgba(255, 255, 255, 0.12);
+    --btn-color: #5b6cff;
+    --delete-color: #ff4d6d;
 
-    --bg-light: linear-gradient(135deg, #f5f3ff, #e9e6ff);
-    --text-light: #1c1c1c;
+    --bg-light: linear-gradient(135deg, #f6f7ff, #e8ebff);
+    --text-light: #111827;
     --box-light: rgba(255, 255, 255, 0.88);
-    --btn-light: #6d5efc;
+    --btn-light: #5b6cff;
 }
 
 * {
+    box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    box-sizing: border-box;
 }
 
 body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
     background: var(--bg-color);
     color: var(--text-color);
-    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px 0 40px 0;
+    padding: 20px 0 40px;
     transition: all 0.4s ease;
-}
-
-body.light {
-    background: var(--bg-light);
-    color: var(--text-light);
 }
 
 h1 {
     margin: 0;
-    padding: 20px 0 10px 0;
-    text-align: center;
+    padding: 20px 0 10px;
     font-size: 2.2em;
-    font-weight: bold;
+    text-align: center;
     background: linear-gradient(90deg, #ffffff, #c7d2fe);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -59,37 +51,26 @@ h1 {
 
 .box {
     background: var(--box-color);
+    width: 440px;
+    max-width: 92%;
     padding: 25px;
     border-radius: 20px;
-    width: 440px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: all 0.4s ease;
-}
-
-body.light .box {
-    background: var(--box-light);
+    backdrop-filter: blur(10px);
 }
 
 .ocjena-card {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 8px 0;
-    padding: 12px 15px;
-    width: 100%;
-    border-radius: 14px;
-    background: var(--box-color);
     gap: 10px;
-    opacity: 0;
-    transform: scale(0.9);
-    transition: all 0.3s;
-}
-
-body.light .ocjena-card {
-    background: var(--box-light);
+    width: 100%;
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.10);
+    align-items: center;
 }
 
 .ocjena-card input {
@@ -101,39 +82,15 @@ body.light .ocjena-card {
     font-size: 1.1em;
 }
 
-.delete {
-    background: var(--delete-color);
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.btn-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-    width: 100%;
-    justify-content: center;
-}
-
 button {
-    padding: 12px 20px;
+    padding: 12px 18px;
     border: none;
     border-radius: 12px;
-    font-size: 1em;
     font-weight: bold;
+    cursor: pointer;
     background: var(--btn-color);
     color: white;
-    cursor: pointer;
-    transition: all 0.25s;
-}
-
-body.light button {
-    background: var(--btn-light);
+    transition: 0.2s;
 }
 
 button:hover {
@@ -141,42 +98,52 @@ button:hover {
     opacity: 0.9;
 }
 
+.delete {
+    background: var(--delete-color);
+}
+
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 .avg {
-    text-align: center;
     margin-top: 15px;
+    text-align: center;
 }
 
 .avg-number {
     font-size: 48px;
     font-weight: bold;
-    transition: all 0.4s ease;
-}
-
-.small-label {
-    opacity: 0.7;
-    font-size: 0.8em;
 }
 
 .small {
-    opacity: 0.85;
+    opacity: 0.8;
     font-size: 0.9em;
 }
 
-/* Animacije */
-@keyframes cardIn {
-    from { opacity: 0; transform: scale(0.8) translateY(-10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+/* light mode */
+body.light {
+    background: var(--bg-light);
+    color: var(--text-light);
 }
 
+body.light .box {
+    background: var(--box-light);
+}
+
+body.light button {
+    background: var(--btn-light);
+}
+
+/* anim */
 @keyframes pop {
     0% { transform: scale(0.8); }
     60% { transform: scale(1.2); }
     100% { transform: scale(1); }
-}
-
-@keyframes pulse {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
 }
 </style>
 </head>
@@ -193,26 +160,20 @@ button:hover {
         <button onclick="izracunaj()">Izračunaj</button>
         <button onclick="obrisiSve()">🗑 Obriši sve</button>
         <button onclick="promijeniTemu()">💡 Tema</button>
-        <button onclick="window.location.href='index.html'">🏠 Menu</button>
-        <button id="installBtn" style="display:none;">📲 Instaliraj</button>
     </div>
 
     <div class="avg">
         <div class="avg-number" id="avg">0.00</div>
-        <div class="small-label">Prosjek</div>
-        <div class="small" id="avg-msg"></div>
+        <div class="small" id="msg"></div>
     </div>
 </div>
 
 <script>
-// Tema
+
 function promijeniTemu(){
     document.body.classList.toggle('light');
-    localStorage.setItem('tema', document.body.classList.contains('light') ? 'light' : 'dark');
 }
-if(localStorage.getItem('tema')==='light') document.body.classList.add('light');
 
-// Dodavanje
 function dodaj(v=""){
     const wrap = document.createElement("div");
     wrap.className = "ocjena-card";
@@ -221,99 +182,68 @@ function dodaj(v=""){
     input.type = "number";
     input.min = 1;
     input.max = 5;
-    input.placeholder = "1-5";
     input.value = v;
 
-    input.oninput = () => {
-        spremi();
-        izracunaj();
-    };
+    input.oninput = izracunaj;
 
-    const btn = document.createElement("button");
-    btn.innerText = "X";
-    btn.className = "delete";
-
-    btn.onclick = () => {
+    const del = document.createElement("button");
+    del.textContent = "X";
+    del.className = "delete";
+    del.onclick = () => {
         wrap.remove();
-        spremi();
         izracunaj();
     };
 
     wrap.appendChild(input);
-    wrap.appendChild(btn);
+    wrap.appendChild(del);
 
     document.getElementById("ocjene").appendChild(wrap);
-
-    setTimeout(() => wrap.style = "opacity:1; transform:scale(1);", 50);
 
     izracunaj();
 }
 
-// spremanje
-function spremi(){
-    const data = [];
-    document.querySelectorAll("#ocjene input").forEach(i=>{
-        if(i.value) data.push(Number(i.value));
-    });
-    localStorage.setItem("grades", JSON.stringify(data));
-}
-
-// izračun
 function izracunaj(){
-    const inputs = document.querySelectorAll("#ocjene input");
+    const inputs = document.querySelectorAll("input");
     let sum = 0, count = 0;
 
-    inputs.forEach(i=>{
+    inputs.forEach(i => {
         let v = Number(i.value);
-        if(v>=1 && v<=5){
+        if(v >= 1 && v <= 5){
             sum += v;
             count++;
         }
     });
 
     const avg = document.getElementById("avg");
-    const msg = document.getElementById("avg-msg");
+    const msg = document.getElementById("msg");
 
-    if(count===0){
+    if(count === 0){
         avg.textContent = "0.00";
         msg.textContent = "";
         return;
     }
 
-    const p = sum / count;
+    let p = sum / count;
 
     avg.textContent = p.toFixed(2);
 
-    avg.style.animation = "pop 0.6s";
-    setTimeout(()=> avg.style.animation="", 600);
+    avg.style.animation = "pop 0.5s";
+    setTimeout(() => avg.style.animation = "", 500);
 
     msg.textContent =
-        p>=4.5 ? "🔥 Odličan!" :
-        p>=3.5 ? "👍 Vrlo dobar" :
-        p>=2.5 ? "🙂 Dobar" :
+        p >= 4.5 ? "🔥 Odličan" :
+        p >= 3.5 ? "👍 Vrlo dobar" :
+        p >= 2.5 ? "🙂 Dobar" :
         "😬 Treba učiti";
-
-    avg.style.color =
-        p>=4.5 ? "#7CFF7C" :
-        p>=3.5 ? "#FFD36E" :
-        p>=2.5 ? "#FFFFFF" :
-        "#FF6B6B";
 }
 
-// brisanje
 function obrisiSve(){
     document.getElementById("ocjene").innerHTML = "";
-    localStorage.removeItem("grades");
     izracunaj();
 }
 
-// učitavanje
-function ucitaj(){
-    const data = JSON.parse(localStorage.getItem("grades")) || [];
-    if(data.length) data.forEach(v=>dodaj(v));
-    else dodaj();
-}
-ucitaj();
+dodaj();
+
 </script>
 
 </body>
