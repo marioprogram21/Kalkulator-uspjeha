@@ -4,222 +4,210 @@
 <meta charset="UTF-8">
 <title>Kalkulator ocjena</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#5b6cff">
 
 <style>
-:root {
-    --bg-color: linear-gradient(135deg, #3a4edb, #6a5cff);
-    --text-color: #ffffff;
-    --box-color: rgba(255, 255, 255, 0.12);
-    --btn-color: #5b6cff;
-    --delete-color: #ff4d6d;
+:root{
+    --bg: linear-gradient(135deg, #0f172a, #0b2a4a, #1b4d6b);
+    --card: rgba(255,255,255,0.08);
+    --card-border: rgba(255,255,255,0.12);
 
-    --bg-light: linear-gradient(135deg, #f6f7ff, #e8ebff);
-    --text-light: #111827;
-    --box-light: rgba(255, 255, 255, 0.88);
-    --btn-light: #5b6cff;
+    --text: #e5f2ff;
+    --muted: rgba(229,242,255,0.7);
+
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+    --danger: #fb7185;
 }
 
-* {
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+*{
+    box-sizing:border-box;
+    font-family: system-ui, Segoe UI, sans-serif;
 }
 
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: var(--bg-color);
-    color: var(--text-color);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 0 40px;
-    transition: all 0.4s ease;
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:30px 15px;
+    background:var(--bg);
+    color:var(--text);
 }
 
-h1 {
-    margin: 0;
-    padding: 20px 0 10px;
-    font-size: 2.2em;
-    text-align: center;
-    background: linear-gradient(90deg, #ffffff, #c7d2fe);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+h1{
+    margin:10px 0 25px;
+    font-size:2.2rem;
+    text-align:center;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
-.box {
-    background: var(--box-color);
-    width: 440px;
-    max-width: 92%;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    backdrop-filter: blur(10px);
+.box{
+    width:420px;
+    max-width:95%;
+    padding:20px;
+    border-radius:22px;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
 
-.ocjena-card {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    margin: 8px 0;
-    padding: 12px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.10);
-    align-items: center;
+.ocjena{
+    display:flex;
+    gap:10px;
+    margin:10px 0;
 }
 
-.ocjena-card input {
-    width: 100px;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    text-align: center;
-    font-size: 1.1em;
+input{
+    flex:1;
+    padding:12px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.06);
+    color:var(--text);
+    text-align:center;
+    font-size:1rem;
+    outline:none;
+    transition:0.2s;
 }
 
-button {
-    padding: 12px 18px;
-    border: none;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    background: var(--btn-color);
-    color: white;
-    transition: 0.2s;
+input:focus{
+    border-color:var(--accent);
+    transform:scale(1.02);
 }
 
-button:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
+button{
+    padding:12px 14px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.2s;
 }
 
-.delete {
-    background: var(--delete-color);
+.btn{
+    background:linear-gradient(135deg, var(--accent), var(--accent2));
+    color:white;
 }
 
-.btn-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 10px;
+.btn:hover{
+    transform:scale(1.05);
 }
 
-.avg {
-    margin-top: 15px;
-    text-align: center;
+.del{
+    background:rgba(255,255,255,0.1);
+    color:var(--danger);
 }
 
-.avg-number {
-    font-size: 48px;
-    font-weight: bold;
+.del:hover{
+    background:var(--danger);
+    color:white;
 }
 
-.small {
-    opacity: 0.8;
-    font-size: 0.9em;
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:15px;
 }
 
-/* light mode */
-body.light {
-    background: var(--bg-light);
-    color: var(--text-light);
+.result{
+    text-align:center;
+    margin-top:20px;
 }
 
-body.light .box {
-    background: var(--box-light);
+.big{
+    font-size:3rem;
+    font-weight:800;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
-body.light button {
-    background: var(--btn-light);
+.small{
+    color:var(--muted);
 }
 
-/* anim */
-@keyframes pop {
-    0% { transform: scale(0.8); }
-    60% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+@keyframes pop{
+    0%{transform:scale(0.8);}
+    60%{transform:scale(1.2);}
+    100%{transform:scale(1);}
 }
 </style>
 </head>
 
 <body>
 
-<h1>Kalkulator ocjena</h1>
+<h1>✨ Kalkulator ocjena</h1>
 
 <div class="box">
-    <div id="ocjene"></div>
 
-    <div class="btn-group">
-        <button onclick="dodaj()">+ Dodaj</button>
-        <button onclick="izracunaj()">Izračunaj</button>
-        <button onclick="obrisiSve()">🗑 Obriši sve</button>
-        <button onclick="promijeniTemu()">💡 Tema</button>
+    <div id="wrap"></div>
+
+    <div class="actions">
+        <button class="btn" onclick="add()">+ Dodaj</button>
+        <button class="btn" onclick="calc()">Izračunaj</button>
+        <button class="del" onclick="clearAll()">Obriši sve</button>
     </div>
 
-    <div class="avg">
-        <div class="avg-number" id="avg">0.00</div>
-        <div class="small" id="msg"></div>
+    <div class="result">
+        <div id="avg" class="big">0.00</div>
+        <div id="msg" class="small"></div>
     </div>
+
 </div>
 
 <script>
 
-function promijeniTemu(){
-    document.body.classList.toggle('light');
-}
-
-function dodaj(v=""){
-    const wrap = document.createElement("div");
-    wrap.className = "ocjena-card";
+function add(val=""){
+    const div = document.createElement("div");
+    div.className = "ocjena";
 
     const input = document.createElement("input");
     input.type = "number";
     input.min = 1;
     input.max = 5;
-    input.value = v;
+    input.value = val;
 
-    input.oninput = izracunaj;
+    input.oninput = calc;
 
     const del = document.createElement("button");
+    del.className = "del";
     del.textContent = "X";
-    del.className = "delete";
     del.onclick = () => {
-        wrap.remove();
-        izracunaj();
+        div.remove();
+        calc();
     };
 
-    wrap.appendChild(input);
-    wrap.appendChild(del);
+    div.appendChild(input);
+    div.appendChild(del);
 
-    document.getElementById("ocjene").appendChild(wrap);
+    document.getElementById("wrap").appendChild(div);
 
-    izracunaj();
+    calc();
 }
 
-function izracunaj(){
-    const inputs = document.querySelectorAll("input");
+function calc(){
+    let inputs = document.querySelectorAll("input");
     let sum = 0, count = 0;
 
-    inputs.forEach(i => {
+    inputs.forEach(i=>{
         let v = Number(i.value);
-        if(v >= 1 && v <= 5){
+        if(v>=1 && v<=5){
             sum += v;
             count++;
         }
     });
 
-    const avg = document.getElementById("avg");
-    const msg = document.getElementById("msg");
+    let avg = document.getElementById("avg");
+    let msg = document.getElementById("msg");
 
-    if(count === 0){
-        avg.textContent = "0.00";
-        msg.textContent = "";
+    if(count===0){
+        avg.textContent="0.00";
+        msg.textContent="";
         return;
     }
 
@@ -227,22 +215,22 @@ function izracunaj(){
 
     avg.textContent = p.toFixed(2);
 
-    avg.style.animation = "pop 0.5s";
-    setTimeout(() => avg.style.animation = "", 500);
+    avg.style.animation="pop 0.5s";
+    setTimeout(()=>avg.style.animation="",500);
 
     msg.textContent =
-        p >= 4.5 ? "🔥 Odličan" :
-        p >= 3.5 ? "👍 Vrlo dobar" :
-        p >= 2.5 ? "🙂 Dobar" :
-        "😬 Treba učiti";
+        p>=4.5 ? "🔥 Top rezultat" :
+        p>=3.5 ? "👍 Dobro" :
+        p>=2.5 ? "🙂 Solidno" :
+        "📚 Treba učiti";
 }
 
-function obrisiSve(){
-    document.getElementById("ocjene").innerHTML = "";
-    izracunaj();
+function clearAll(){
+    document.getElementById("wrap").innerHTML="";
+    calc();
 }
 
-dodaj();
+add();
 
 </script>
 
