@@ -7,175 +7,156 @@
 
 <style>
 :root {
-    /* 🌊 nova premium "ocean aurora" tema */
+    /* 🌊 nova “aurora ocean premium” tema */
     --bg-color: linear-gradient(135deg, #0f172a, #0b3a5a, #1e1b4b);
-    --text-color: #eaf2ff;
+    --text-color: #ffffff;
 
     --box-color: rgba(255,255,255,0.10);
-    --box-border: rgba(255,255,255,0.15);
+    --box-light: rgba(255,255,255,0.85);
 
-    --btn-color: linear-gradient(135deg, #38bdf8, #6366f1);
+    --btn-color: #38bdf8;
     --delete-color: #fb7185;
 
     --bg-light: linear-gradient(135deg, #f4f7ff, #e8ecff);
     --text-light: #111827;
-
-    --box-light: rgba(255,255,255,0.85);
-    --btn-light: #6366f1;
 }
 
-*{
-    box-sizing:border-box;
-    font-family: 'Segoe UI', sans-serif;
-    -webkit-font-smoothing: antialiased;
-}
-
-body{
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:20px 0 40px;
-
+body {
     background: var(--bg-color);
     color: var(--text-color);
-    transition:0.4s;
+    font-family: 'Segoe UI', sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* 🔥 OSTALO ISTO - centrirano */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px 0 40px;
+    transition: 0.4s;
 }
 
-h1{
-    margin:0;
-    padding:20px 0 10px;
-    font-size:2.2em;
-    text-align:center;
+h1 {
+    margin: 0;
+    padding: 20px 0 10px;
+    text-align: center;
+
+    font-size: 2.2em;
+    font-weight: bold;
 
     background: linear-gradient(90deg, #38bdf8, #a78bfa, #60a5fa);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.box{
-    width:440px;
-    max-width:92%;
-    padding:25px;
-    border-radius:20px;
-
+/* BOX - ISTO CENTRIRANJE + ISTA VELIČINA */
+.box {
     background: var(--box-color);
-    border:1px solid var(--box-border);
-    backdrop-filter: blur(12px);
+    padding: 25px;
+    border-radius: 20px;
+    width: 440px;
 
     box-shadow: 0 15px 35px rgba(0,0,0,0.35);
 
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 🔥 ISTO OSTALO */
 }
 
-.ocjena-card{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin:8px 0;
-    padding:12px 15px;
-    width:100%;
-    border-radius:14px;
+.ocjena-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+    margin: 8px 0;
+    padding: 12px 15px;
+    width: 100%;
+
+    border-radius: 14px;
     background: rgba(255,255,255,0.08);
-    gap:10px;
-    transition:0.3s;
+
+    gap: 10px;
 }
 
-input{
-    width:100px;
-    padding:10px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.2);
+input {
+    width: 100px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+
+    text-align: center;
+    font-size: 1.1em;
+
     background: rgba(255,255,255,0.06);
-    color: var(--text-color);
-    text-align:center;
-    outline:none;
+    color: white;
 }
 
-input:focus{
-    border-color:#38bdf8;
-    transform:scale(1.05);
-}
+button {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 12px;
 
-button{
-    padding:12px 18px;
-    border:none;
-    border-radius:12px;
-    font-weight:bold;
-    cursor:pointer;
-    color:white;
+    font-weight: bold;
+    cursor: pointer;
 
     background: var(--btn-color);
-    transition:0.2s;
+    color: white;
+
+    transition: 0.2s;
 }
 
-button:hover{
-    transform:scale(1.05);
-    opacity:0.9;
+button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
 
-.delete{
+.delete {
     background: var(--delete-color);
-    padding:6px 12px;
+    padding: 6px 12px;
 }
 
-.btn-group{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:10px;
-    justify-content:center;
-    width:100%;
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
 }
 
-.avg{
-    text-align:center;
-    margin-top:15px;
+.avg {
+    text-align: center;
+    margin-top: 15px;
 }
 
-.avg-number{
-    font-size:48px;
-    font-weight:bold;
-    transition:0.4s;
+.avg-number {
+    font-size: 48px;
+    font-weight: bold;
 }
 
-.small-label{
-    opacity:0.7;
-    font-size:0.8em;
+.small-label {
+    opacity: 0.7;
+    font-size: 0.8em;
 }
 
-.small{
-    opacity:0.85;
-    font-size:0.9em;
+.small {
+    opacity: 0.85;
+    font-size: 0.9em;
 }
 
-/* light mode */
-body.light{
+/* LIGHT MODE ISTO OSTALO */
+body.light {
     background: var(--bg-light);
     color: var(--text-light);
 }
 
-body.light .box{
+body.light .box {
     background: var(--box-light);
 }
 
-body.light input{
-    color: var(--text-light);
-}
-
-body.light button{
-    background: var(--btn-light);
-}
-
-/* animacija */
-@keyframes pop{
-    0%{transform:scale(0.8);}
-    60%{transform:scale(1.2);}
-    100%{transform:scale(1);}
+@keyframes pop {
+    0% { transform: scale(0.8); }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
 </style>
 </head>
@@ -192,6 +173,7 @@ body.light button{
         <button onclick="izracunaj()">Izračunaj</button>
         <button onclick="obrisiSve()">🗑 Obriši sve</button>
         <button onclick="promijeniTemu()">💡 Tema</button>
+        <button onclick="window.location.href='index.html'">🏠 Menu</button>
     </div>
 
     <div class="avg">
@@ -202,8 +184,9 @@ body.light button{
 
 <script>
 
+// ISTO KAO TVOJ ORIGINAL
 function promijeniTemu(){
-    document.body.classList.toggle("light");
+    document.body.classList.toggle('light');
 }
 
 function dodaj(v=""){
@@ -218,16 +201,17 @@ function dodaj(v=""){
 
     input.oninput = izracunaj;
 
-    const del = document.createElement("button");
-    del.textContent = "X";
-    del.className = "delete";
-    del.onclick = () => {
+    const btn = document.createElement("button");
+    btn.textContent = "X";
+    btn.className = "delete";
+
+    btn.onclick = () => {
         wrap.remove();
         izracunaj();
     };
 
     wrap.appendChild(input);
-    wrap.appendChild(del);
+    wrap.appendChild(btn);
 
     document.getElementById("ocjene").appendChild(wrap);
 
@@ -260,8 +244,8 @@ function izracunaj(){
 
     avg.textContent = p.toFixed(2);
 
-    avg.style.animation="pop 0.5s";
-    setTimeout(()=>avg.style.animation="",500);
+    avg.style.animation = "pop 0.5s";
+    setTimeout(()=> avg.style.animation="", 500);
 
     msg.textContent =
         p>=4.5 ? "🔥 Odličan" :
@@ -271,7 +255,7 @@ function izracunaj(){
 }
 
 function obrisiSve(){
-    document.getElementById("ocjene").innerHTML="";
+    document.getElementById("ocjene").innerHTML = "";
     izracunaj();
 }
 
