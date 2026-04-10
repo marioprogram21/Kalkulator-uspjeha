@@ -6,8 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
+/* 🔥 iPhone FIX */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 :root {
-    /* 🌊 nova “aurora ocean premium” tema */
     --bg-color: linear-gradient(135deg, #0f172a, #0b3a5a, #1e1b4b);
     --text-color: #ffffff;
 
@@ -22,17 +29,35 @@
 }
 
 body {
+    min-height: 100vh;
+    min-height: 100dvh; /* 🔥 iPhone safe */
+
     background: var(--bg-color);
+    background-attachment: fixed; /* full screen fix */
+
     color: var(--text-color);
     font-family: 'Segoe UI', sans-serif;
 
     display: flex;
     flex-direction: column;
-    align-items: center;   /* 🔥 OSTALO ISTO - centrirano */
-    min-height: 100vh;
+    align-items: center;
+
     margin: 0;
     padding: 20px 0 40px;
+
     transition: 0.4s;
+}
+
+/* 🔥 extra safety layer (fix white edges) */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-color);
+    z-index: -1;
 }
 
 h1 {
@@ -48,18 +73,21 @@ h1 {
     -webkit-text-fill-color: transparent;
 }
 
-/* BOX - ISTO CENTRIRANJE + ISTA VELIČINA */
 .box {
-    background: var(--box-color);
-    padding: 25px;
-    border-radius: 20px;
     width: 440px;
+    max-width: 92%;
+    padding: 25px;
 
+    border-radius: 20px;
+
+    background: var(--box-color);
     box-shadow: 0 15px 35px rgba(0,0,0,0.35);
 
     display: flex;
     flex-direction: column;
-    align-items: center; /* 🔥 ISTO OSTALO */
+    align-items: center;
+
+    backdrop-filter: blur(12px);
 }
 
 .ocjena-card {
@@ -80,6 +108,7 @@ h1 {
 input {
     width: 100px;
     padding: 10px;
+
     border-radius: 10px;
     border: none;
 
@@ -92,6 +121,7 @@ input {
 
 button {
     padding: 12px 18px;
+
     border: none;
     border-radius: 12px;
 
@@ -133,17 +163,12 @@ button:hover {
     font-weight: bold;
 }
 
-.small-label {
-    opacity: 0.7;
-    font-size: 0.8em;
-}
-
 .small {
     opacity: 0.85;
     font-size: 0.9em;
 }
 
-/* LIGHT MODE ISTO OSTALO */
+/* light mode */
 body.light {
     background: var(--bg-light);
     color: var(--text-light);
@@ -153,11 +178,13 @@ body.light .box {
     background: var(--box-light);
 }
 
+/* anim */
 @keyframes pop {
     0% { transform: scale(0.8); }
     60% { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
+
 </style>
 </head>
 
@@ -184,7 +211,6 @@ body.light .box {
 
 <script>
 
-// ISTO KAO TVOJ ORIGINAL
 function promijeniTemu(){
     document.body.classList.toggle('light');
 }
