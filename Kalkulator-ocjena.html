@@ -7,42 +7,48 @@
 
 <style>
 
-/* 🔥 iPhone FIX */
-html {
+/* 🔥 FULL RESET (bitno za iPhone Safari) */
+html, body {
+    width: 100%;
     height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 body {
     min-height: 100vh;
+    min-height: -webkit-fill-available;
     min-height: 100dvh;
-
-    margin: 0;
-    padding: 20px 0 40px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    overflow-x: hidden;
+    padding: 20px 0 40px;
 
-    font-family: 'Segoe UI', sans-serif;
+    -webkit-overflow-scrolling: touch;
 
-    background: linear-gradient(135deg, #0f172a, #0b3a5a, #1e1b4b);
-    background-attachment: fixed;
-
+    position: relative;
     color: white;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* 🔥 OVO JE KLJUČ (fix za bijeli rub i bounce) */
-body::after {
+/* 🔥 HARD BACKGROUND FIX (ovo rješava bijelo 100%) */
+body::before {
     content: "";
     position: fixed;
-    inset: 0;
+    top: -80px;
+    left: -80px;
+    right: -80px;
+    bottom: -80px;
+
     background: linear-gradient(135deg, #0f172a, #0b3a5a, #1e1b4b);
-    z-index: -10;
+
+    z-index: -999;
 }
 
-/* 🧠 osnovni layout */
+/* 🌈 HEADER */
 h1 {
     margin: 0;
     padding: 20px 0 10px;
@@ -54,6 +60,7 @@ h1 {
     -webkit-text-fill-color: transparent;
 }
 
+/* 📦 BOX */
 .box {
     width: 440px;
     max-width: 92%;
@@ -71,6 +78,7 @@ h1 {
     align-items: center;
 }
 
+/* 🧾 OCJENE */
 .ocjena-card {
     display: flex;
     justify-content: center;
@@ -100,6 +108,7 @@ input {
     color: white;
 }
 
+/* 🔘 BUTTONS */
 button {
     padding: 12px 18px;
 
@@ -134,6 +143,7 @@ button:hover {
     width: 100%;
 }
 
+/* 📊 RESULT */
 .avg {
     text-align: center;
     margin-top: 15px;
@@ -149,7 +159,7 @@ button:hover {
     font-size: 0.9em;
 }
 
-/* animacija */
+/* ✨ ANIM */
 @keyframes pop {
     0% { transform: scale(0.8); }
     60% { transform: scale(1.2); }
@@ -164,6 +174,7 @@ button:hover {
 <h1>Kalkulator ocjena</h1>
 
 <div class="box">
+
     <div id="ocjene"></div>
 
     <div class="btn-group">
@@ -171,13 +182,13 @@ button:hover {
         <button onclick="izracunaj()">Izračunaj</button>
         <button onclick="obrisiSve()">🗑 Obriši sve</button>
         <button onclick="promijeniTemu()">💡 Tema</button>
-        <button onclick="window.location.href='index.html'">🏠 Menu</button>
     </div>
 
     <div class="avg">
         <div class="avg-number" id="avg">0.00</div>
         <div class="small" id="msg"></div>
     </div>
+
 </div>
 
 <script>
