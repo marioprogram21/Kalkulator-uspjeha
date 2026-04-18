@@ -22,9 +22,11 @@ body {
     border-radius: 25px;
     background: #f0f0f0;
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    animation: fadeIn 0.6s ease;
     color: #111;
 }
 
+/* Istaknutiji naslov */
 h2 {
     text-align: center;
     font-size: 3em;
@@ -33,14 +35,26 @@ h2 {
     background: linear-gradient(90deg, #ff9a9e, #fad0c4, #667eea, #89f7fe);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: 0 5px 20px rgba(0,0,0,0.45);
+    animation: titlePop 0.8s ease-out;
 }
 
-select, input {
+@keyframes titlePop {
+    0% { transform: scale(0.8) translateY(-20px); opacity: 0; }
+    50% { transform: scale(1.2) translateY(0); opacity: 1; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+select, input[type=number] {
     width: 100%;
     padding: 12px;
     margin: 8px 0;
     border: none;
     border-radius: 12px;
+    outline: none;
+    font-size: 1em;
+    background: white;
+    color: #111;
 }
 
 button {
@@ -48,19 +62,50 @@ button {
     margin: 5px 0;
     border: none;
     border-radius: 12px;
+    font-size: 1em;
     font-weight: bold;
     background: #333;
     color: white;
     cursor: pointer;
+    transition: 0.2s;
 }
+
+button:hover { background: #555; }
+
+.cards { margin-top: 15px; }
 
 .card {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
-    margin-top: 6px;
+    align-items: center;
+    padding: 10px 12px;
     border-radius: 14px;
+    margin-top: 6px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     background: #e0e0e0;
+    color: #111;
+}
+
+.avg { text-align: center; margin-top: 20px; }
+.avg-number { font-size: 48px; font-weight: bold; }
+
+.small { opacity: 0.8; font-size: 0.9em; }
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Animacije */
+@keyframes fadeIn { from {opacity:0; transform: translateY(25px);} to {opacity:1; transform: translateY(0);} }
+@keyframes avgPop {
+    0% { opacity:0; transform: scale(0.8) translateY(-10px); }
+    50% { transform: scale(1.3) translateY(-5px); opacity:1; }
+    70% { transform: scale(0.9) translateY(3px); }
+    100% { transform: scale(1) translateY(0); }
 }
 </style>
 </head>
@@ -68,54 +113,97 @@ button {
 <body>
 
 <div class="app">
+    <h2>Kalkulator općeg uspjeha</h2>
 
-<h2>Kalkulator općeg uspjeha</h2>
+    <select id="subject">
+        <option value="" disabled selected>Odaberi predmet</option>
+        <option>Matematika</option>
+        <option>Hrvatski jezik</option>
+        <option>Engleski jezik</option>
+        <option>Biologija (Priroda)</option>
+        <option>Povijest</option>
+        <option>Geografija</option>
+        <option>Likovna kultura</option>
+        <option>Glazbena kultura</option>
+        <option>Tjelesna i zdravstvena kultura</option>
+        <option>Tehnička kultura</option>
+        <option>Informatika</option>
+        <option>Njemački jezik (Deutsch)</option>
+        <option>Francuski jezik (Français)</option>
+        <option>Fizika</option>
+        <option>Kemija</option>
+        <option>Vjeronauk</option>
+    </select>
 
-<select id="subject">
-    <option>Matematika</option>
-    <option>Hrvatski jezik</option>
-    <option>Engleski jezik</option>
-</select>
+    <input type="number" id="grade" placeholder="Ocjena (1-5)" onkeypress="handleEnter(event)">
 
-<input type="number" id="grade">
+    <div class="btn-group">
+        <button onclick="add()">Dodaj ocjenu</button>
+        <button onclick="removeAll()">Obriši sve</button>
+        <button onclick="window.location.href='index.html'">🏠 Menu</button>
+    </div>
 
-<button onclick="add()">Dodaj</button>
-<button onclick="removeAll()">Obriši sve</button>
-<button onclick="window.location.href='index.html'">🏠 Menu</button>
+    <div class="cards" id="cards"></div>
 
-<div id="cards"></div>
-
+    <div class="avg">
+        <div class="avg-number" id="avg">0.00</div>
+        <div class="small">Prosjek</div>
+    </div>
 </div>
 
 <script>
-let grades = [];
+let grades = JSON.parse(localStorage.getItem("grades") || "[]");
+grades = grades.map(g => { if(g.subject === "Priroda") g.subject = "Biologija (Priroda)"; return g; });
+grades = grades.filter(g => g.subject && !isNaN(g.grade));
 
-function add(){
-    let s=document.getElementById("subject").value;
-    let g=Number(document.getElementById("grade").value);
+function save() { localStorage.setItem("grades", JSON.stringify(grades)); }
+function handleEnter(e) { if (e.key === "Enter") add(); }
 
-    if(!g) return;
-
-    grades.push({s,g});
+function add() {
+    const subject = document.getElementById("subject").value;
+    const grade = parseInt(document.getElementById("grade").value);
+    if (!subject || grade < 1 || grade > 5) return;
+    grades.push({ subject, grade });
+    save();
     render();
+    document.getElementById("subject").selectedIndex = 0;
+    document.getElementById("grade").value = "";
 }
 
-function render(){
-    let c=document.getElementById("cards");
-    c.innerHTML="";
+function remove(i) { grades.splice(i, 1); save(); render(); }
+function removeAll() { grades = []; save(); render(); }
 
-    grades.forEach(g=>{
-        let div=document.createElement("div");
-        div.className="card";
-        div.innerHTML=`<span>${g.s}</span><span>${g.g}</span>`;
-        c.appendChild(div);
+function render() {
+    const container = document.getElementById("cards");
+    container.innerHTML = "";
+    grades = grades.filter(g => g.subject && !isNaN(g.grade));
+    grades.forEach((g, i) => {
+        const card = document.createElement("div");
+        card.className = `card g${g.grade}`;
+        card.innerHTML = `<span>${g.subject}</span><span class="grade">${g.grade}</span>`;
+        const btn = document.createElement("button");
+        btn.className = "delete";
+        btn.textContent = "x";
+        btn.onclick = () => remove(i);
+        card.appendChild(btn);
+        container.appendChild(card);
     });
+    calc();
 }
 
-function removeAll(){
-    grades=[];
-    render();
+function calc() {
+    const avgElem = document.getElementById("avg");
+    if (grades.length === 0) { avgElem.textContent = "0.00"; avgElem.style.color = "#111"; return; }
+    let sum = grades.reduce((a,b)=>a+b.grade,0);
+    let avg = (sum / grades.length).toFixed(2);
+    avgElem.textContent = avg;
+    avgElem.style.animation = "avgPop 0.8s";
+    if(avg>=4.5) avgElem.style.color = "green";
+    else if(avg>=3.5) avgElem.style.color = "orange";
+    else avgElem.style.color = "red";
 }
+
+render();
 </script>
 
 </body>
