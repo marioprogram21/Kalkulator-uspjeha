@@ -1,85 +1,36 @@
-<!DOCTYPE html>
-<html lang="hr">
-<head>
-<meta charset="UTF-8">
-<title>Kalkulator ocjena</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 
-/* 🔥 iPhone FULL FIX */
+/* reset */
 html, body {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+/* DARK THEME */
 body {
     min-height: 100vh;
-    min-height: -webkit-fill-available;
-    min-height: 100dvh;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
     padding: 20px 0 40px;
 
-    position: relative;
+    background: #1a237e;
     color: white;
-    font-family: 'Segoe UI', sans-serif;
 
-    background: #1a237e;
+    transition: 0.3s ease;
 }
 
-/* 🔵 DARK BACKGROUND */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: #1a237e;
-    z-index: -999;
-}
-
-/* 🌙 LIGHT THEME (FIX ZA TOGGLE) */
+/* LIGHT THEME ✔ */
 body.light {
     background: #f0e6ff;
     color: #111;
 }
 
-body.light::before {
-    background: #f0e6ff;
-}
-
-body.light .box {
-    background: rgba(255,255,255,0.35);
-    color: #111;
-}
-
-body.light input {
-    color: #111;
-    background: rgba(0,0,0,0.05);
-}
-
-body.light button {
-    filter: brightness(1.05);
-}
-
-/* naslov */
-h1 {
-    margin: 0;
-    padding: 20px 0 10px;
-    text-align: center;
-    font-size: 2.2em;
-
-    background: linear-gradient(90deg, #38bdf8, #a78bfa, #60a5fa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* ✔ BOX (glass stil) */
+/* BOX */
 .box {
     width: 440px;
     max-width: 92%;
@@ -97,32 +48,21 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    transition: 0.3s;
 }
 
-/* ocjene */
-.ocjena-card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin: 8px 0;
-    padding: 12px 15px;
-    width: 100%;
-
-    border-radius: 14px;
-    background: rgba(255,255,255,0.08);
-
-    gap: 10px;
+/* LIGHT BOX */
+body.light .box {
+    background: rgba(255,255,255,0.4);
 }
 
-/* input */
+/* INPUT */
 input {
     width: 100px;
     padding: 10px;
-
     border-radius: 10px;
     border: none;
-
     text-align: center;
     font-size: 1.1em;
 
@@ -130,13 +70,16 @@ input {
     color: white;
 }
 
-/* gumbi */
+body.light input {
+    color: #111;
+    background: rgba(0,0,0,0.05);
+}
+
+/* BUTTON */
 button {
     padding: 12px 18px;
-
     border: none;
     border-radius: 12px;
-
     font-weight: bold;
     cursor: pointer;
 
@@ -154,15 +97,13 @@ button:hover {
 /* delete */
 .delete {
     background: #fb7185;
-    padding: 6px 12px;
 }
 
-/* MENU GUMB */
+/* menu */
 .menu-btn {
     background: linear-gradient(135deg, #22c55e, #4ade80);
 }
 
-/* grupa */
 .btn-group {
     display: flex;
     flex-wrap: wrap;
@@ -172,10 +113,9 @@ button:hover {
     width: 100%;
 }
 
-/* rezultat */
 .avg {
-    text-align: center;
     margin-top: 15px;
+    text-align: center;
 }
 
 .avg-number {
@@ -188,118 +128,4 @@ button:hover {
     font-size: 0.9em;
 }
 
-/* anim */
-@keyframes pop {
-    0% { transform: scale(0.8); }
-    60% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
-
 </style>
-</head>
-
-<body>
-
-<h1>Kalkulator ocjena</h1>
-
-<div class="box">
-
-    <div id="ocjene"></div>
-
-    <div class="btn-group">
-        <button onclick="dodaj()">+ Dodaj</button>
-        <button onclick="izracunaj()">Izračunaj</button>
-        <button onclick="obrisiSve()">🗑 Obriši sve</button>
-        <button onclick="promijeniTemu()">💡 Tema</button>
-        <button class="menu-btn" onclick="window.location.href='index.html'">🏠 Menu</button>
-    </div>
-
-    <div class="avg">
-        <div class="avg-number" id="avg">0.00</div>
-        <div class="small" id="msg"></div>
-    </div>
-
-</div>
-
-<script>
-
-function promijeniTemu(){
-    document.body.classList.toggle('light');
-}
-
-function dodaj(v=""){
-    const wrap = document.createElement("div");
-    wrap.className = "ocjena-card";
-
-    const input = document.createElement("input");
-    input.type = "number";
-    input.min = 1;
-    input.max = 5;
-    input.value = v;
-
-    input.oninput = izracunaj;
-
-    const btn = document.createElement("button");
-    btn.textContent = "X";
-    btn.className = "delete";
-
-    btn.onclick = () => {
-        wrap.remove();
-        izracunaj();
-    };
-
-    wrap.appendChild(input);
-    wrap.appendChild(btn);
-
-    document.getElementById("ocjene").appendChild(wrap);
-
-    izracunaj();
-}
-
-function izracunaj(){
-    const inputs = document.querySelectorAll("input");
-
-    let sum = 0, count = 0;
-
-    inputs.forEach(i=>{
-        let v = Number(i.value);
-        if(v>=1 && v<=5){
-            sum += v;
-            count++;
-        }
-    });
-
-    const avg = document.getElementById("avg");
-    const msg = document.getElementById("msg");
-
-    if(count===0){
-        avg.textContent="0.00";
-        msg.textContent="";
-        return;
-    }
-
-    let p = sum / count;
-
-    avg.textContent = p.toFixed(2);
-
-    avg.style.animation = "pop 0.5s";
-    setTimeout(()=> avg.style.animation="", 500);
-
-    msg.textContent =
-        p>=4.5 ? "🔥 Odličan" :
-        p>=3.5 ? "👍 Vrlo dobar" :
-        p>=2.5 ? "🙂 Dobar" :
-        "😬 Treba učiti";
-}
-
-function obrisiSve(){
-    document.getElementById("ocjene").innerHTML = "";
-    izracunaj();
-}
-
-dodaj();
-
-</script>
-
-</body>
-</html>
