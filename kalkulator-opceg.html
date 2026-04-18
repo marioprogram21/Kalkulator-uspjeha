@@ -2,62 +2,65 @@
 <html lang="hr">
 <head>
 <meta charset="UTF-8">
-<title>Opći uspjeh</title>
+<title>Kalkulator općeg uspjeha</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+* { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin:0; padding:0; }
+
 body {
-    background: #1a237e; /* ✔ ISTA BOJA */
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
     display: flex;
     justify-content: center;
-    padding: 20px;
+    align-items: center;
 }
 
 .app {
-    width: 380px;
-    padding: 25px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.08);
+    width: 360px;
+    padding: 30px;
+    border-radius: 25px;
+    background: #f0f0f0;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    color: #111;
+}
+
+h2 {
+    text-align: center;
+    font-size: 3em;
+    font-weight: 900;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, #ff9a9e, #fad0c4, #667eea, #89f7fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 select, input {
     width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 10px;
+    padding: 12px;
+    margin: 8px 0;
     border: none;
+    border-radius: 12px;
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    border-radius: 10px;
+    padding: 10px;
+    margin: 5px 0;
     border: none;
-    background: #6c5ce7;
+    border-radius: 12px;
+    font-weight: bold;
+    background: #333;
     color: white;
     cursor: pointer;
-}
-
-button:hover {
-    background: #5a4fcf;
 }
 
 .card {
     display: flex;
     justify-content: space-between;
-    padding: 8px;
+    padding: 10px;
     margin-top: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-}
-
-.avg {
-    text-align: center;
-    font-size: 40px;
-    margin-top: 15px;
+    border-radius: 14px;
+    background: #e0e0e0;
 }
 </style>
 </head>
@@ -66,28 +69,26 @@ button:hover {
 
 <div class="app">
 
-<h2 style="text-align:center;">Opći uspjeh</h2>
+<h2>Kalkulator općeg uspjeha</h2>
 
 <select id="subject">
     <option>Matematika</option>
-    <option>Hrvatski</option>
-    <option>Engleski</option>
+    <option>Hrvatski jezik</option>
+    <option>Engleski jezik</option>
 </select>
 
-<input id="grade" type="number" min="1" max="5">
+<input type="number" id="grade">
 
 <button onclick="add()">Dodaj</button>
-<button onclick="calc()">Izračunaj</button>
-<button onclick="location.href='index.html'">Menu</button>
+<button onclick="removeAll()">Obriši sve</button>
+<button onclick="window.location.href='index.html'">🏠 Menu</button>
 
 <div id="cards"></div>
-
-<div class="avg" id="avg">0.00</div>
 
 </div>
 
 <script>
-let data=[];
+let grades = [];
 
 function add(){
     let s=document.getElementById("subject").value;
@@ -95,7 +96,7 @@ function add(){
 
     if(!g) return;
 
-    data.push({s,g});
+    grades.push({s,g});
     render();
 }
 
@@ -103,20 +104,17 @@ function render(){
     let c=document.getElementById("cards");
     c.innerHTML="";
 
-    data.forEach(d=>{
+    grades.forEach(g=>{
         let div=document.createElement("div");
         div.className="card";
-        div.innerHTML=`<span>${d.s}</span><span>${d.g}</span>`;
+        div.innerHTML=`<span>${g.s}</span><span>${g.g}</span>`;
         c.appendChild(div);
     });
 }
 
-function calc(){
-    let sum=0;
-    data.forEach(d=>sum+=d.g);
-
-    document.getElementById("avg").textContent=
-        data.length?(sum/data.length).toFixed(2):"0.00";
+function removeAll(){
+    grades=[];
+    render();
 }
 </script>
 
