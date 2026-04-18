@@ -6,16 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-    --bg-color: #1a237e;
-    --text-color: #ffffff;
-    --accent-color: #6c5ce7;
-    --hover-color: #5a4fcf;
-}
-
 body {
-    background: var(--bg-color);
-    color: var(--text-color);
+    background: #1a237e; /* ✔ ISTA BOJA */
+    color: white;
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
     display: flex;
@@ -29,7 +22,6 @@ body {
     padding: 25px;
     border-radius: 20px;
     background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
 }
 
 h1 {
@@ -54,12 +46,12 @@ button {
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    background: var(--accent-color);
+    background: #6c5ce7;
     color: white;
 }
 
 button:hover {
-    background: var(--hover-color);
+    background: #5a4fcf;
 }
 
 .btn-group {
@@ -98,17 +90,17 @@ button:hover {
 
 <script>
 function dodaj(){
-    const wrap = document.createElement("div");
-    wrap.className = "ocjena-card";
+    const wrap=document.createElement("div");
+    wrap.className="ocjena-card";
 
-    const input = document.createElement("input");
-    input.type = "number";
-    input.min = 1;
-    input.max = 5;
+    const input=document.createElement("input");
+    input.type="number";
+    input.min=1;
+    input.max=5;
 
-    const btn = document.createElement("button");
-    btn.textContent = "X";
-    btn.onclick = () => wrap.remove();
+    const btn=document.createElement("button");
+    btn.textContent="X";
+    btn.onclick=()=>wrap.remove();
 
     wrap.appendChild(input);
     wrap.appendChild(btn);
@@ -117,7 +109,7 @@ function dodaj(){
 }
 
 function izracunaj(){
-    const inputs = document.querySelectorAll("input");
+    const inputs=document.querySelectorAll("input");
     let sum=0,count=0;
 
     inputs.forEach(i=>{
@@ -125,8 +117,8 @@ function izracunaj(){
         if(v>=1 && v<=5){ sum+=v; count++; }
     });
 
-    document.getElementById("avg").textContent =
-        count ? (sum/count).toFixed(2) : "0.00";
+    document.getElementById("avg").textContent=
+        count?(sum/count).toFixed(2):"0.00";
 }
 
 function obrisiSve(){
