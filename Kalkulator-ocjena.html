@@ -31,16 +31,40 @@ body {
     color: white;
     font-family: 'Segoe UI', sans-serif;
 
-    background: #1a237e; /* ✔ NOVA JEDINSTVENA BOJA */
+    background: #1a237e;
 }
 
-/* background fix uklonjen gradient */
+/* 🔵 DARK BACKGROUND */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
     background: #1a237e;
     z-index: -999;
+}
+
+/* 🌙 LIGHT THEME (FIX ZA TOGGLE) */
+body.light {
+    background: #f0e6ff;
+    color: #111;
+}
+
+body.light::before {
+    background: #f0e6ff;
+}
+
+body.light .box {
+    background: rgba(255,255,255,0.35);
+    color: #111;
+}
+
+body.light input {
+    color: #111;
+    background: rgba(0,0,0,0.05);
+}
+
+body.light button {
+    filter: brightness(1.05);
 }
 
 /* naslov */
@@ -55,7 +79,7 @@ h1 {
     -webkit-text-fill-color: transparent;
 }
 
-/* ✔ UJEDNAČEN BOX (kao drugi kalkulator) */
+/* ✔ BOX (glass stil) */
 .box {
     width: 440px;
     max-width: 92%;
