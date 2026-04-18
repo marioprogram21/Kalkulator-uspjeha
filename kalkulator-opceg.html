@@ -6,16 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-    --bg-color: #1a237e;
-    --text-color: #ffffff;
-    --accent-color: #6c5ce7;
-    --hover-color: #5a4fcf;
-}
-
 body {
-    background: var(--bg-color);
-    color: var(--text-color);
+    background: #1a237e; /* ✔ ISTA BOJA */
+    color: white;
     font-family: 'Segoe UI', sans-serif;
     display: flex;
     justify-content: center;
@@ -43,13 +36,13 @@ button {
     margin-top: 8px;
     border-radius: 10px;
     border: none;
-    background: var(--accent-color);
+    background: #6c5ce7;
     color: white;
     cursor: pointer;
 }
 
 button:hover {
-    background: var(--hover-color);
+    background: #5a4fcf;
 }
 
 .card {
@@ -110,7 +103,7 @@ function render(){
     let c=document.getElementById("cards");
     c.innerHTML="";
 
-    data.forEach((d,i)=>{
+    data.forEach(d=>{
         let div=document.createElement("div");
         div.className="card";
         div.innerHTML=`<span>${d.s}</span><span>${d.g}</span>`;
@@ -122,8 +115,8 @@ function calc(){
     let sum=0;
     data.forEach(d=>sum+=d.g);
 
-    document.getElementById("avg").textContent =
-        data.length ? (sum/data.length).toFixed(2) : "0.00";
+    document.getElementById("avg").textContent=
+        data.length?(sum/data.length).toFixed(2):"0.00";
 }
 </script>
 
